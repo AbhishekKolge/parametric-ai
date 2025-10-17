@@ -24,6 +24,7 @@
     "better-auth": "catalog:",
     "dotenv": "catalog:",
     "zod": "catalog:",
-    "@parametric-ai/db": "workspace:*"
+    "@parametric-ai/db": "workspace:*",
+    "@parametric-ai/utils": "workspace:*"
   }
 }

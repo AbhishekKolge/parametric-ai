@@ -1,6 +1,6 @@
 import { Button } from "@parametric-ai/ui/components/button";
 
-export default function Home() {
+export default function Page() {
   return (
     <div>
       <Button>Test</Button>

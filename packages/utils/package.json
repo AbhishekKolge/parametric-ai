@@ -1,0 +1,22 @@
+{
+  "name": "@parametric-ai/utils",
+  "type": "module",
+  "exports": {
+    "./email": {
+      "types": "./dist/email/index.d.ts",
+      "default": "./src/email/index.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsdown"
+  },
+  "devDependencies": {
+    "tsdown": "catalog:"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "resend": "^6.1.3"
+  }
+}
