@@ -10,24 +10,27 @@
     "start": "node dist/index.js"
   },
   "dependencies": {
-    "express": "^5.1.0",
-    "cors": "^2.8.5",
-    "@trpc/server": "catalog:",
-    "better-auth": "catalog:",
-    "ai": "catalog:",
     "@ai-sdk/google": "catalog:",
-    "dotenv": "catalog:",
-    "zod": "catalog:",
     "@parametric-ai/api": "workspace:*",
     "@parametric-ai/auth": "workspace:*",
-    "@parametric-ai/db": "workspace:*"
+    "@parametric-ai/db": "workspace:*",
+    "@trpc/server": "catalog:",
+    "ai": "catalog:",
+    "better-auth": "catalog:",
+    "cors": "^2.8.5",
+    "dotenv": "catalog:",
+    "express": "^5.1.0",
+    "express-async-error": "^0.0.2",
+    "helmet": "^8.1.0",
+    "http-status-codes": "^2.3.0",
+    "zod": "catalog:"
   },
   "devDependencies": {
-    "typescript": "catalog:",
-    "@types/express": "^5.0.1",
     "@types/cors": "^2.8.17",
-    "tsx": "^4.19.2",
+    "@types/express": "^5.0.1",
     "@types/node": "catalog:",
-    "tsdown": "catalog:"
+    "tsdown": "catalog:",
+    "tsx": "^4.19.2",
+    "typescript": "catalog:"
   }
 }

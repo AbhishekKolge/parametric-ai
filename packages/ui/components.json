@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "new-york",
+  "rsc": true,
+  "tsx": true,
+  "tailwind": {
+    "config": "",
+    "css": "src/styles/globals.css",
+    "baseColor": "neutral",
+    "cssVariables": true
+  },
+  "iconLibrary": "lucide",
+  "aliases": {
+    "components": "@parametric-ai/ui/components",
+    "utils": "@parametric-ai/ui/lib/utils",
+    "hooks": "@parametric-ai/ui/hooks",
+    "lib": "@parametric-ai/ui/lib",
+    "ui": "@parametric-ai/ui/components"
+  }
+}
