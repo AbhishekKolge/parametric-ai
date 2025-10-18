@@ -1,3 +1,4 @@
+
 model User {
   id            String    @id @map("_id")
   name          String
@@ -56,4 +57,13 @@ model Verification {
   updatedAt  DateTime?
 
   @@map("verification")
+}
+
+model RateLimit {
+  id          String  @id
+  key         String?
+  count       Int?
+  lastRequest BigInt?
+
+  @@map("rateLimit")
 }
