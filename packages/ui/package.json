@@ -5,18 +5,20 @@
   "private": true,
   "scripts": {},
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-label": "catalog:",
     "@radix-ui/react-separator": "^1.1.7",
     "@radix-ui/react-slot": "catalog:",
+    "@radix-ui/react-tooltip": "^1.2.8",
     "class-variance-authority": "catalog:",
     "clsx": "catalog:",
+    "lucide-react": "catalog:",
     "next-themes": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "sonner": "catalog:",
     "tailwind-merge": "catalog:",
-    "tw-animate-css": "catalog:",
-    "lucide-react": "catalog:"
+    "tw-animate-css": "catalog:"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "catalog:",

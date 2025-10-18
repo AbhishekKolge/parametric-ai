@@ -7,10 +7,12 @@ import {
   CardContent,
   CardDescription,
   CardFooter,
+  CardHeader,
   CardTitle,
 } from "@parametric-ai/ui/components/card";
 import {
   Field,
+  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
@@ -27,19 +29,23 @@ import Link from "next/link";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { type LoginFormDto, loginFormSchema } from "../utils/schema";
+import { type SignUpFormDto, signUpFormSchema } from "../../utils/schema";
 
-export const LoginForm = () => {
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const form = useForm<LoginFormDto>({
-    resolver: zodResolver(loginFormSchema),
+export const SignUpForm = () => {
+  const [isPasswordVisible, setIsPasswordVisible] = useState({
+    password: false,
+    confirmPassword: false,
+  });
+  const form = useForm<SignUpFormDto>({
+    resolver: zodResolver(signUpFormSchema),
     defaultValues: {
       email: "",
       password: "",
+      confirmPassword: "",
     },
   });
 
-  function onSubmit(data: LoginFormDto) {
+  function onSubmit(data: SignUpFormDto) {
     toast("You submitted the following values:", {
       description: (
         <pre className="mt-2 w-[320px] overflow-x-auto rounded-md bg-code p-4 text-code-foreground">
@@ -57,13 +63,27 @@ export const LoginForm = () => {
   }
 
   const passwordVisibilityHandler = () => {
-    setIsPasswordVisible((prev) => !prev);
+    setIsPasswordVisible((prev) => ({
+      ...prev,
+      password: !prev.password,
+    }));
+  };
+
+  const confirmPasswordVisibilityHandler = () => {
+    setIsPasswordVisible((prev) => ({
+      ...prev,
+      confirmPassword: !prev.confirmPassword,
+    }));
   };
 
   return (
     <Card className="w-full sm:max-w-md">
-      <CardTitle>Welcome back</CardTitle>
-      <CardDescription>Login to your Parametric AI account</CardDescription>
+      <CardHeader>
+        <CardTitle>Create an account</CardTitle>
+        <CardDescription>
+          Enter your information below to create your account
+        </CardDescription>
+      </CardHeader>
       <CardContent>
         <form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}>
           <FieldGroup>
@@ -78,6 +98,7 @@ export const LoginForm = () => {
                     aria-invalid={fieldState.invalid}
                     id="email"
                     placeholder="ai@example.com"
+                    type="email"
                   />
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
@@ -90,28 +111,62 @@ export const LoginForm = () => {
               name="password"
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <div className="flex items-center">
-                    <FieldLabel htmlFor="password">Password</FieldLabel>
-                    <Link
-                      className="ml-auto text-sm underline-offset-2 hover:underline"
-                      href="#"
-                    >
-                      Forgot your password?
-                    </Link>
-                  </div>
+                  <FieldLabel htmlFor="password">Password</FieldLabel>
                   <InputGroup>
                     <InputGroupInput
                       {...field}
                       aria-invalid={fieldState.invalid}
                       id="password"
-                      type={isPasswordVisible ? "text" : "password"}
+                      type={isPasswordVisible.password ? "text" : "password"}
                     />
                     <InputGroupAddon align="inline-end">
                       <InputGroupButton
                         onClick={passwordVisibilityHandler}
                         size="icon-xs"
                       >
-                        {isPasswordVisible ? <EyeClosed /> : <EyeIcon />}
+                        {isPasswordVisible.password ? (
+                          <EyeClosed />
+                        ) : (
+                          <EyeIcon />
+                        )}
+                      </InputGroupButton>
+                    </InputGroupAddon>
+                  </InputGroup>
+
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+            <Controller
+              control={form.control}
+              name="confirmPassword"
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="confirmPassword">
+                    Confirm Password
+                  </FieldLabel>
+
+                  <InputGroup>
+                    <InputGroupInput
+                      {...field}
+                      aria-invalid={fieldState.invalid}
+                      id="confirmPassword"
+                      type={
+                        isPasswordVisible.confirmPassword ? "text" : "password"
+                      }
+                    />
+                    <InputGroupAddon align="inline-end">
+                      <InputGroupButton
+                        onClick={confirmPasswordVisibilityHandler}
+                        size="icon-xs"
+                      >
+                        {isPasswordVisible.confirmPassword ? (
+                          <EyeClosed />
+                        ) : (
+                          <EyeIcon />
+                        )}
                       </InputGroupButton>
                     </InputGroupAddon>
                   </InputGroup>
@@ -128,8 +183,11 @@ export const LoginForm = () => {
       <CardFooter>
         <Field>
           <Button form="form-rhf-demo" type="submit">
-            Login
+            Create Account
           </Button>
+          <FieldDescription className="text-center">
+            Already have an account? <Link href="/auth/login">Login</Link>
+          </FieldDescription>
         </Field>
       </CardFooter>
     </Card>

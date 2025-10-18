@@ -1,20 +1,30 @@
 import z from "zod";
 import { MIN_PASSWORD_LENGTH } from "./const";
 
+const passwordSchema = z
+  .string()
+  .trim()
+  .nonempty("Password is required")
+  .min(MIN_PASSWORD_LENGTH, "At least 8 characters long")
+  .regex(/[A-Z]/, "At least one uppercase letter")
+  .regex(/[a-z]/, "At least one lowercase letter")
+  .regex(/[0-9]/, "At least one number")
+  .regex(/[@$!%*?&#]/, "At least one special character");
+
 export const loginFormSchema = z.object({
-  email: z.email("Enter a valid email address"),
-  password: z
-    .string()
-    .trim()
-    .nonempty("Password is required")
-    .min(MIN_PASSWORD_LENGTH, "Password must be at least 8 characters long")
-    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-    .regex(/[a-z]/, "Password must contain at least one lowercase letter")
-    .regex(/[0-9]/, "Password must contain at least one number")
-    .regex(
-      /[@$!%*?&#]/,
-      "Password must contain at least one special character"
-    ),
+  email: z.email("Invalid email address"),
+  password: passwordSchema,
 });
 
 export type LoginFormDto = z.infer<typeof loginFormSchema>;
+
+export const signUpFormSchema = loginFormSchema
+  .extend({
+    confirmPassword: z.string().trim().nonempty("Confirm Password is required"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
+
+export type SignUpFormDto = z.infer<typeof signUpFormSchema>;
