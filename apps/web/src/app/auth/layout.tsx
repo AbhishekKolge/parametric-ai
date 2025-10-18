@@ -1,3 +1,4 @@
+import { AuthChecker } from "@/components/layout/auth-checker";
 import { AuthLayout } from "@/modules/auth/components/layout";
 
 export default function Layout({
@@ -5,5 +6,9 @@ export default function Layout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <AuthLayout>{children}</AuthLayout>;
+  return (
+    <AuthChecker>
+      <AuthLayout>{children}</AuthLayout>
+    </AuthChecker>
+  );
 }

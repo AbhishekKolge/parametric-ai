@@ -1,11 +1,11 @@
 import z from "zod";
-import { MIN_PASSWORD_LENGTH } from "./const";
+import { MIN_NAME_LENGTH, MIN_PASSWORD_LENGTH } from "./const";
 
 const passwordSchema = z
   .string()
   .trim()
   .nonempty("Password is required")
-  .min(MIN_PASSWORD_LENGTH, "At least 8 characters long")
+  .min(MIN_PASSWORD_LENGTH, `At least ${MIN_PASSWORD_LENGTH} characters long`)
   .regex(/[A-Z]/, "At least one uppercase letter")
   .regex(/[a-z]/, "At least one lowercase letter")
   .regex(/[0-9]/, "At least one number")
@@ -20,6 +20,11 @@ export type LoginFormDto = z.infer<typeof loginFormSchema>;
 
 export const signUpFormSchema = loginFormSchema
   .extend({
+    name: z
+      .string()
+      .min(MIN_NAME_LENGTH, `At least ${MIN_NAME_LENGTH} characters long`)
+      .trim()
+      .nonempty("Name is required"),
     confirmPassword: z.string().trim().nonempty("Confirm Password is required"),
   })
   .refine((data) => data.password === data.confirmPassword, {

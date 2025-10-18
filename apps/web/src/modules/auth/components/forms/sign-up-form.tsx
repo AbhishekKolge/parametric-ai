@@ -24,14 +24,19 @@ import {
   InputGroupButton,
   InputGroupInput,
 } from "@parametric-ai/ui/components/input-group";
+import { LoadingSwap } from "@parametric-ai/ui/components/loading-swap";
 import { EyeClosed, EyeIcon } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { authClient } from "@/lib/auth-client";
+import { EMAIL_VERIFICATION_CALLBACK_URL } from "../../utils/const";
 import { type SignUpFormDto, signUpFormSchema } from "../../utils/schema";
 
 export const SignUpForm = () => {
+  const router = useRouter();
   const [isPasswordVisible, setIsPasswordVisible] = useState({
     password: false,
     confirmPassword: false,
@@ -45,22 +50,25 @@ export const SignUpForm = () => {
     },
   });
 
-  function onSubmit(data: SignUpFormDto) {
-    toast("You submitted the following values:", {
-      description: (
-        <pre className="mt-2 w-[320px] overflow-x-auto rounded-md bg-code p-4 text-code-foreground">
-          <code>{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-      position: "bottom-right",
-      classNames: {
-        content: "flex flex-col gap-2",
+  const onSubmit = async ({ name, email, password }: SignUpFormDto) => {
+    await authClient.signUp.email(
+      {
+        name,
+        email,
+        password,
+        callbackURL: EMAIL_VERIFICATION_CALLBACK_URL,
       },
-      style: {
-        "--border-radius": "calc(var(--radius)  + 4px)",
-      } as React.CSSProperties,
-    });
-  }
+      {
+        onSuccess: () => {
+          router.push("/auth/login");
+          toast.success("Please check your email to verify your account");
+        },
+        onError: (ctx) => {
+          toast.error(ctx.error.message || "Failed to sign up");
+        },
+      }
+    );
+  };
 
   const passwordVisibilityHandler = () => {
     setIsPasswordVisible((prev) => ({
@@ -85,8 +93,26 @@ export const SignUpForm = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}>
+        <form id="sign-up-form" onSubmit={form.handleSubmit(onSubmit)}>
           <FieldGroup>
+            <Controller
+              control={form.control}
+              name="name"
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="name">Name</FieldLabel>
+                  <Input
+                    {...field}
+                    aria-invalid={fieldState.invalid}
+                    id="name"
+                    placeholder="John Doe"
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
             <Controller
               control={form.control}
               name="email"
@@ -182,8 +208,14 @@ export const SignUpForm = () => {
       </CardContent>
       <CardFooter>
         <Field>
-          <Button form="form-rhf-demo" type="submit">
-            Create Account
+          <Button
+            disabled={form.formState.isSubmitting}
+            form="sign-up-form"
+            type="submit"
+          >
+            <LoadingSwap isLoading={form.formState.isSubmitting}>
+              Create Account
+            </LoadingSwap>
           </Button>
           <FieldDescription className="text-center">
             Already have an account? <Link href="/auth/login">Login</Link>
