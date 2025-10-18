@@ -33,3 +33,21 @@ export const signUpFormSchema = loginFormSchema
   });
 
 export type SignUpFormDto = z.infer<typeof signUpFormSchema>;
+
+export const forgotPasswordFormSchema = z.object({
+  email: z.email("Invalid email address"),
+});
+
+export type ForgotPasswordFormDto = z.infer<typeof forgotPasswordFormSchema>;
+
+export const resetPasswordFormSchema = z
+  .object({
+    newPassword: passwordSchema,
+    confirmPassword: z.string().trim().nonempty("Confirm Password is required"),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
+
+export type ResetPasswordFormDto = z.infer<typeof resetPasswordFormSchema>;

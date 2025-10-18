@@ -1,7 +1,9 @@
 export const MIN_PASSWORD_LENGTH = 8;
 export const MIN_NAME_LENGTH = 3;
 export const INVALID_TOKEN_ERROR = "invalid_token";
+export const INVALID_RESET_PASSWORD_TOKEN_ERROR = "INVALID_TOKEN";
 export const EMAIL_NOT_VERIFIED_ERROR_CODE = "EMAIL_NOT_VERIFIED";
 export const EMAIL_VERIFICATION_CALLBACK_URL = `${process.env.NEXT_PUBLIC_CLIENT_URL}/auth/login`;
 export const RESEND_EMAIL_COOL_DOWN_SECONDS = 30;
 export const ONE_SECOND_MS = 1000;
+export const FORGOT_PASSWORD_REDIRECT_URL = `${process.env.NEXT_PUBLIC_CLIENT_URL}/auth/reset-password`;

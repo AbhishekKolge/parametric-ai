@@ -37,7 +37,7 @@ import {
   EMAIL_VERIFICATION_CALLBACK_URL,
 } from "../../utils/const";
 import { type LoginFormDto, loginFormSchema } from "../../utils/schema";
-import { InvalidEmailVerificationAlert } from "../alerts/invalid-email-verfication-alert";
+import { InvalidEmailVerificationAlert } from "../alerts/invalid-email-verification-alert";
 import { ResendEmailVerificationAlert } from "../alerts/resend-email-verification-alert";
 
 export const LoginForm = () => {
@@ -46,8 +46,8 @@ export const LoginForm = () => {
   const form = useForm<LoginFormDto>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
-      email: "zemuqyw@mailinator.com",
-      password: "Pa$$w0rd!",
+      email: "",
+      password: "",
     },
   });
 
@@ -72,8 +72,8 @@ export const LoginForm = () => {
     );
   };
 
-  const resendEmailVerificationHandler = async () => {
-    await authClient.sendVerificationEmail(
+  const resendEmailVerificationHandler = () =>
+    authClient.sendVerificationEmail(
       {
         email: form.getValues("email"),
         callbackURL: EMAIL_VERIFICATION_CALLBACK_URL,
@@ -81,17 +81,12 @@ export const LoginForm = () => {
       {
         onSuccess: () => {
           resendEmailVerificationDisclosure.close();
-          toast.success("Verification email resent. Please check your inbox.");
         },
-        onError: (ctx) => {
+        onError: () => {
           resendEmailVerificationDisclosure.close();
-          toast.error(
-            ctx.error.message || "Failed to resend verification email"
-          );
         },
       }
     );
-  };
 
   const passwordVisibilityHandler = () => {
     setIsPasswordVisible((prev) => !prev);

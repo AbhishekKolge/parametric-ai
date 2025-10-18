@@ -12,13 +12,15 @@ import {
 } from "@parametric-ai/ui/components/alert-dialog";
 import { useRef, useState } from "react";
 import type { useDisclosure } from "@/hooks/use-disclosure";
+import type { authClient } from "@/lib/auth-client";
 import {
   ONE_SECOND_MS,
   RESEND_EMAIL_COOL_DOWN_SECONDS,
 } from "../../utils/const";
+import { AuthActionButton } from "../buttons/auth-action-button";
 
 type ResendEmailVerificationAlertProps = ReturnType<typeof useDisclosure> & {
-  onResend: () => Promise<void>;
+  onResend: () => Promise<ReturnType<typeof authClient.sendVerificationEmail>>;
 };
 
 export const ResendEmailVerificationAlert = ({
@@ -48,12 +50,14 @@ export const ResendEmailVerificationAlert = ({
     }, ONE_SECOND_MS);
   };
 
-  const resendHandler = async (
+  const resendHandler = () => {
+    startEmailVerificationCountdown();
+    return onResend();
+  };
+  const preventAlertClose = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
-    await onResend();
-    startEmailVerificationCountdown();
   };
 
   return (
@@ -69,11 +73,18 @@ export const ResendEmailVerificationAlert = ({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Close</AlertDialogCancel>
-          <AlertDialogAction
-            disabled={timeToNextResend > 0}
-            onClick={resendHandler}
-          >
-            {timeToNextResend > 0 ? `Resend (${timeToNextResend})` : "Resend"}
+          <AlertDialogAction asChild>
+            <AuthActionButton
+              action={resendHandler}
+              disabled={timeToNextResend > 0}
+              errorMessage="Failed to resend verification email"
+              onClick={preventAlertClose}
+              successMessage="Verification email resent. Please check your inbox."
+            >
+              {timeToNextResend > 0
+                ? `Resend Email (${timeToNextResend})`
+                : "Resend Email"}
+            </AuthActionButton>
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

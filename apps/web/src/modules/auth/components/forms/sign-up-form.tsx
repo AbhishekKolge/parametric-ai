@@ -173,7 +173,6 @@ export const SignUpForm = () => {
                   <FieldLabel htmlFor="confirmPassword">
                     Confirm Password
                   </FieldLabel>
-
                   <InputGroup>
                     <InputGroupInput
                       {...field}

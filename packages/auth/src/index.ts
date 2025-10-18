@@ -4,10 +4,7 @@ import {
   SESSION_EXPIRES_IN,
   SESSION_UPDATE_AGE,
 } from "@parametric-ai/utils/auth/const";
-import {
-  sendEmailVerification,
-  sendResetPasswordEmail,
-} from "@parametric-ai/utils/email/helper";
+import { sendEmailVerification } from "@parametric-ai/utils/email/helper";
 import { APIError, betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 
@@ -31,16 +28,17 @@ export const auth = betterAuth({
     enabled: true,
     requireEmailVerification: true,
     sendResetPassword: async ({ user, url }) => {
-      try {
-        await sendResetPasswordEmail({
-          to: user.email,
-          url,
-        });
-      } catch {
-        throw new APIError("INTERNAL_SERVER_ERROR", {
-          message: "Failed to send reset password email",
-        });
-      }
+      // try {
+      //   await sendResetPasswordEmail({
+      //     to: user.email,
+      //     url,
+      //   });
+      // } catch {
+      //   throw new APIError("INTERNAL_SERVER_ERROR", {
+      //     message: "Failed to send reset password email",
+      //   });
+      // }
+      console.log(url);
     },
   },
   emailVerification: {
