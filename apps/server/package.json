@@ -10,7 +10,6 @@
     "start": "node dist/index.js"
   },
   "dependencies": {
-    "@ai-sdk/google": "catalog:",
     "@parametric-ai/api": "workspace:*",
     "@parametric-ai/auth": "workspace:*",
     "@parametric-ai/db": "workspace:*",

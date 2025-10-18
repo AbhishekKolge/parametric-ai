@@ -1,0 +1,38 @@
+model Experiment {
+    id          String     @id @map("_id")
+    name        String
+    description String
+    modelId     String
+    prompt      String
+    tags        String[]
+    userId      String
+    user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+    createdAt   DateTime   @default(now())
+    updatedAt   DateTime   @updatedAt
+    responses   Response[]
+
+    @@unique([prompt])
+    @@index([name])
+    @@index([createdAt(sort: Desc)])
+    @@index([modelId])
+    @@index([userId])
+    @@index([tags])
+    @@map("experiment")
+}
+
+model Response {
+    id               String     @id @map("_id")
+    experimentId     String
+    experiment       Experiment @relation(fields: [experimentId], references: [id], onDelete: Cascade)
+    temperature      Float
+    topP             Float
+    maxTokens        Int?
+    frequencyPenalty Float?     @default(0)
+    presencePenalty  Float?     @default(0)
+    content          String
+    metrics          Json
+    createdAt        DateTime   @default(now())
+
+    @@index([experimentId, createdAt(sort: Desc)])
+    @@map("response")
+}

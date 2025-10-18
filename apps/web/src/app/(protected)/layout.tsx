@@ -1,4 +1,4 @@
-import { SidebarLayout } from "@/components/layout";
+import { ProtectedLayout } from "@/components/layout";
 import { AuthChecker } from "@/components/layout/auth-checker";
 
 export default function Layout({
@@ -8,7 +8,7 @@ export default function Layout({
 }>) {
   return (
     <AuthChecker>
-      <SidebarLayout>{children}</SidebarLayout>
+      <ProtectedLayout>{children}</ProtectedLayout>
     </AuthChecker>
   );
 }
