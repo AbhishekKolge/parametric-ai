@@ -30,6 +30,7 @@
     "dotenv": "catalog:",
     "zod": "catalog:",
     "better-auth": "catalog:",
+    "http-status-codes": "catalog:",
     "@parametric-ai/auth": "workspace:*",
     "@parametric-ai/db": "workspace:*"
   }

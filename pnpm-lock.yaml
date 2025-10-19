@@ -63,6 +63,9 @@ catalogs:
     groq-sdk:
       specifier: ^0.33.0
       version: 0.33.0
+    http-status-codes:
+      specifier: ^2.3.0
+      version: 2.3.0
     lucide-react:
       specifier: 0.475.0
       version: 0.475.0
@@ -169,7 +172,7 @@ importers:
         specifier: ^8.1.0
         version: 8.1.0
       http-status-codes:
-        specifier: ^2.3.0
+        specifier: 'catalog:'
         version: 2.3.0
       zod:
         specifier: 'catalog:'
@@ -317,6 +320,9 @@ importers:
       groq-sdk:
         specifier: 'catalog:'
         version: 0.33.0
+      http-status-codes:
+        specifier: 'catalog:'
+        version: 2.3.0
       typescript:
         specifier: ^5
         version: 5.9.3

@@ -1,6 +1,6 @@
 import Groq from "groq-sdk";
 
-const groq = new Groq({ apiKey: "" });
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 export const getAllModels = async () => {
   const res = await groq.models.list();
