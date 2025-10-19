@@ -1,10 +1,7 @@
-import { Button } from "@parametric-ai/ui/components/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@parametric-ai/ui/components/dialog";
@@ -25,15 +22,7 @@ export const CreateExperimentDialog = ({
           Set up a new experiment to test different LLM parameters
         </DialogDescription>
       </DialogHeader>
-      <CreateExperimentForm close={close} />
-      <DialogFooter>
-        <DialogClose asChild>
-          <Button variant="outline">Cancel</Button>
-        </DialogClose>
-        <Button form="create-experiment-form" type="submit">
-          Save changes
-        </Button>
-      </DialogFooter>
+      <CreateExperimentForm toggle={toggle} />
     </DialogContent>
   </Dialog>
 );

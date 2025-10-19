@@ -16,6 +16,7 @@ import {
   InputGroupText,
   InputGroupTextarea,
 } from "@parametric-ai/ui/components/input-group";
+import { LoadingSwap } from "@parametric-ai/ui/components/loading-swap";
 import {
   Select,
   SelectContent,
@@ -43,14 +44,14 @@ import {
 
 type CreateExperimentFormProps = Pick<
   ReturnType<typeof useDisclosure>,
-  "close"
+  "toggle"
 >;
 
-export const CreateExperimentForm = ({ close }: CreateExperimentFormProps) => {
+export const CreateExperimentForm = ({ toggle }: CreateExperimentFormProps) => {
   const aiModels = useQuery(trpc.experiment.getAllAIModels.queryOptions());
   const createExperimentMutation = useCreateExperiment({
     onSuccess: () => {
-      close();
+      toggle();
       form.reset();
     },
   });
@@ -93,185 +94,202 @@ export const CreateExperimentForm = ({ close }: CreateExperimentFormProps) => {
   const maxPromptLength = selectedModel ? selectedModel.context_window : 0;
 
   return (
-    <form id="create-experiment-form" onSubmit={form.handleSubmit(onSubmit)}>
-      <FieldGroup>
-        <Controller
-          control={form.control}
-          name="name"
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="name">Name</FieldLabel>
-              <Input
-                {...field}
-                aria-invalid={fieldState.invalid}
-                id="name"
-                placeholder="Enter experiment name"
-              />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
-        <Controller
-          control={form.control}
-          name="modelId"
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldContent>
-                <FieldLabel htmlFor="modelId">LLM Model</FieldLabel>
-                <FieldDescription>
-                  Select the model you want to use in this experiment
-                </FieldDescription>
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </FieldContent>
-              <Select
-                name={field.name}
-                onValueChange={field.onChange}
-                value={field.value}
-              >
-                <SelectTrigger aria-invalid={fieldState.invalid} id="modelId">
-                  <SelectValue placeholder="Select model" />
-                </SelectTrigger>
-                <SelectContent position="item-aligned">
-                  <SelectSeparator />
-                  {aiModels.data?.map((model) => (
-                    <SelectItem key={model.id} value={model.id}>
-                      {model.id} ({model.owned_by})
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </Field>
-          )}
-        />
-        {!!selectedModel && (
+    <>
+      <form id="create-experiment-form" onSubmit={form.handleSubmit(onSubmit)}>
+        <FieldGroup>
           <Controller
             control={form.control}
-            name="prompt"
+            name="name"
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="prompt">Write a prompt</FieldLabel>
-                <InputGroup>
-                  <InputGroupTextarea
-                    {...field}
-                    aria-invalid={fieldState.invalid}
-                    className="min-h-24 resize-none"
-                    id="prompt"
-                    maxLength={maxPromptLength}
-                    placeholder="Enter experiment prompt"
-                    rows={6}
-                  />
-                  <InputGroupAddon align="block-end">
-                    <InputGroupText className="tabular-nums">
-                      {field.value.length}/{maxPromptLength} characters (tokens)
-                    </InputGroupText>
-                  </InputGroupAddon>
-                </InputGroup>
-
+                <FieldLabel htmlFor="name">Name</FieldLabel>
+                <Input
+                  {...field}
+                  aria-invalid={fieldState.invalid}
+                  id="name"
+                  placeholder="Enter experiment name"
+                />
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
                 )}
               </Field>
             )}
           />
-        )}
-        <Controller
-          control={form.control}
-          name="tags"
-          render={({ fieldState }) => {
-            const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
-              const inputValue = e.currentTarget.value;
-              const trimmedInputValue = inputValue.trim() || "";
-
-              if (
-                !trimmedInputValue ||
-                trimmedInputValue.length > MAX_EXPERIMENT_TAG_LENGTH ||
-                trimmedInputValue.length < MIN_EXPERIMENT_TAG_LENGTH ||
-                tagFields.length >= MAX_TAGS
-              ) {
-                return;
-              }
-              const isTagIncluded = tagFields.some(
-                (tag) => tag.name === trimmedInputValue
-              );
-              if (!isTagIncluded) {
-                appendTag({ name: trimmedInputValue });
-                e.currentTarget.value = "";
-              }
-            };
-
-            const handleKeyDown = (
-              e: React.KeyboardEvent<HTMLInputElement>
-            ) => {
-              const inputValue = e.currentTarget.value;
-              if (e.key === "Enter") {
-                e.preventDefault();
-                handleAddTag(e);
-              } else if (
-                e.key === "Backspace" &&
-                !inputValue &&
-                !!tagFields.length
-              ) {
-                removeTag(tagFields.length - 1);
-              }
-            };
-
-            return (
+          <Controller
+            control={form.control}
+            name="modelId"
+            render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="tags">Tags</FieldLabel>
-                <FieldDescription>
-                  Add upto {MAX_TAGS} tags to help organize your experiments
-                </FieldDescription>
-                <InputGroup>
-                  {!!tagFields.length && (
-                    <InputGroupAddon
-                      align="block-start"
-                      className="flex-wrap gap-2"
-                    >
-                      {tagFields.map((tag, index) => (
-                        <InputGroupText
-                          className="min-w-auto rounded-full bg-white ps-4 text-secondary"
-                          key={tag.id}
-                        >
-                          <span className="max-w-[150px] truncate">
-                            {tag.name}
-                          </span>
-                          <Button
-                            aria-label={`Remove tag ${tag.name}`}
-                            className="rounded-full"
-                            onClick={() => removeTag(index)}
-                            size="icon-sm"
-                            type="button"
-                            variant="ghost"
-                          >
-                            <X />
-                          </Button>
-                        </InputGroupText>
-                      ))}
-                    </InputGroupAddon>
+                <FieldContent>
+                  <FieldLabel htmlFor="modelId">LLM Model</FieldLabel>
+                  <FieldDescription>
+                    Select the model you want to use in this experiment
+                  </FieldDescription>
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
                   )}
-
-                  <InputGroupInput
-                    aria-invalid={fieldState.invalid}
-                    disabled={tagFields.length >= MAX_TAGS}
-                    id="tags"
-                    maxLength={MAX_EXPERIMENT_TAG_LENGTH}
-                    minLength={MIN_EXPERIMENT_TAG_LENGTH}
-                    onKeyDown={handleKeyDown}
-                    placeholder={
-                      tagFields.length < MAX_TAGS
-                        ? "Type a tag and press enter"
-                        : "Max tags reached"
-                    }
-                    type="text"
-                  />
-                </InputGroup>
+                </FieldContent>
+                <Select
+                  name={field.name}
+                  onValueChange={field.onChange}
+                  value={field.value}
+                >
+                  <SelectTrigger aria-invalid={fieldState.invalid} id="modelId">
+                    <SelectValue placeholder="Select model" />
+                  </SelectTrigger>
+                  <SelectContent position="item-aligned">
+                    <SelectSeparator />
+                    {aiModels.data?.map((model) => (
+                      <SelectItem key={model.id} value={model.id}>
+                        {model.id} ({model.owned_by})
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </Field>
-            );
-          }}
-        />
-      </FieldGroup>
-    </form>
+            )}
+          />
+          {!!selectedModel && (
+            <Controller
+              control={form.control}
+              name="prompt"
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="prompt">Write a prompt</FieldLabel>
+                  <InputGroup>
+                    <InputGroupTextarea
+                      {...field}
+                      aria-invalid={fieldState.invalid}
+                      className="min-h-24 resize-none"
+                      id="prompt"
+                      maxLength={maxPromptLength}
+                      placeholder="Enter experiment prompt"
+                      rows={6}
+                    />
+                    <InputGroupAddon align="block-end">
+                      <InputGroupText className="tabular-nums">
+                        {field.value.length}/{maxPromptLength} characters
+                        (tokens)
+                      </InputGroupText>
+                    </InputGroupAddon>
+                  </InputGroup>
+
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+          )}
+          <Controller
+            control={form.control}
+            name="tags"
+            render={({ fieldState }) => {
+              const handleAddTag = (
+                e: React.KeyboardEvent<HTMLInputElement>
+              ) => {
+                const inputValue = e.currentTarget.value;
+                const trimmedInputValue = inputValue.trim() || "";
+
+                if (
+                  !trimmedInputValue ||
+                  trimmedInputValue.length > MAX_EXPERIMENT_TAG_LENGTH ||
+                  trimmedInputValue.length < MIN_EXPERIMENT_TAG_LENGTH ||
+                  tagFields.length >= MAX_TAGS
+                ) {
+                  return;
+                }
+                const isTagIncluded = tagFields.some(
+                  (tag) => tag.name === trimmedInputValue
+                );
+                if (!isTagIncluded) {
+                  appendTag({ name: trimmedInputValue });
+                  e.currentTarget.value = "";
+                }
+              };
+
+              const handleKeyDown = (
+                e: React.KeyboardEvent<HTMLInputElement>
+              ) => {
+                const inputValue = e.currentTarget.value;
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleAddTag(e);
+                } else if (
+                  e.key === "Backspace" &&
+                  !inputValue &&
+                  !!tagFields.length
+                ) {
+                  removeTag(tagFields.length - 1);
+                }
+              };
+
+              return (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="tags">Tags</FieldLabel>
+                  <FieldDescription>
+                    Add upto {MAX_TAGS} tags to help organize your experiments
+                  </FieldDescription>
+                  <InputGroup>
+                    {!!tagFields.length && (
+                      <InputGroupAddon
+                        align="block-start"
+                        className="flex-wrap gap-2"
+                      >
+                        {tagFields.map((tag, index) => (
+                          <InputGroupText
+                            className="min-w-auto rounded-full bg-white ps-4 text-secondary"
+                            key={tag.id}
+                          >
+                            <span className="max-w-[150px] truncate">
+                              {tag.name}
+                            </span>
+                            <Button
+                              aria-label={`Remove tag ${tag.name}`}
+                              className="rounded-full"
+                              onClick={() => removeTag(index)}
+                              size="icon-sm"
+                              type="button"
+                              variant="ghost"
+                            >
+                              <X />
+                            </Button>
+                          </InputGroupText>
+                        ))}
+                      </InputGroupAddon>
+                    )}
+
+                    <InputGroupInput
+                      aria-invalid={fieldState.invalid}
+                      disabled={tagFields.length >= MAX_TAGS}
+                      id="tags"
+                      maxLength={MAX_EXPERIMENT_TAG_LENGTH}
+                      minLength={MIN_EXPERIMENT_TAG_LENGTH}
+                      onKeyDown={handleKeyDown}
+                      placeholder={
+                        tagFields.length < MAX_TAGS
+                          ? "Type a tag and press enter"
+                          : "Max tags reached"
+                      }
+                      type="text"
+                    />
+                  </InputGroup>
+                </Field>
+              );
+            }}
+          />
+        </FieldGroup>
+      </form>
+      <div className="flex justify-end gap-2">
+        <Button onClick={toggle} variant="outline">
+          Cancel
+        </Button>
+        <Button form="create-experiment-form" type="submit">
+          <LoadingSwap isLoading={createExperimentMutation.isPending}>
+            Create
+          </LoadingSwap>
+        </Button>
+      </div>
+    </>
   );
 };
