@@ -9,6 +9,14 @@
     "./email/helper": {
       "types": "./dist/email/helper.d.ts",
       "default": "./src/email/helper.ts"
+    },
+    "./experiment/schema": {
+      "types": "./dist/experiment/schema.d.ts",
+      "default": "./src/experiment/schema.ts"
+    },
+    "./experiment/const": {
+      "types": "./dist/experiment/const.d.ts",
+      "default": "./src/experiment/const.ts"
     }
   },
   "scripts": {
@@ -22,6 +30,7 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "nodemailer": "^7.0.9"
+    "nodemailer": "^7.0.9",
+    "zod": "catalog:"
   }
 }

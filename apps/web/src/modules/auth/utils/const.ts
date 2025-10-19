@@ -1,5 +1,7 @@
 export const MIN_PASSWORD_LENGTH = 8;
+export const MAX_PASSWORD_LENGTH = 128;
 export const MIN_NAME_LENGTH = 3;
+export const MAX_NAME_LENGTH = 100;
 export const INVALID_TOKEN_ERROR = "invalid_token";
 export const INVALID_RESET_PASSWORD_TOKEN_ERROR = "INVALID_TOKEN";
 export const EMAIL_NOT_VERIFIED_ERROR_CODE = "EMAIL_NOT_VERIFIED";

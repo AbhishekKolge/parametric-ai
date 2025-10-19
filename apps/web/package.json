@@ -13,6 +13,7 @@
     "@parametric-ai/api": "workspace:*",
     "@parametric-ai/auth": "workspace:*",
     "@parametric-ai/ui": "workspace:*",
+    "@parametric-ai/utils": "workspace:*",
     "@prisma/client": "catalog:",
     "@tanstack/react-query": "catalog:",
     "@trpc/client": "catalog:",

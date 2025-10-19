@@ -32,6 +32,7 @@
     "better-auth": "catalog:",
     "http-status-codes": "catalog:",
     "@parametric-ai/auth": "workspace:*",
-    "@parametric-ai/db": "workspace:*"
+    "@parametric-ai/db": "workspace:*",
+    "@parametric-ai/utils": "workspace:*"
   }
 }

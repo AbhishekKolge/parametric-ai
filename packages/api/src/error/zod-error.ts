@@ -16,7 +16,7 @@ export function handleZodError({
 
   const messageSummary = formattedIssues
     .map((e) => (e.path ? `${e.path}: ${e.message}` : e.message))
-    .join("; ");
+    .join(", ");
 
   return {
     ...shape,

@@ -1,11 +1,17 @@
 import z from "zod";
-import { MIN_NAME_LENGTH, MIN_PASSWORD_LENGTH } from "./const";
+import {
+  MAX_NAME_LENGTH,
+  MAX_PASSWORD_LENGTH,
+  MIN_NAME_LENGTH,
+  MIN_PASSWORD_LENGTH,
+} from "./const";
 
 const passwordSchema = z
   .string()
   .trim()
-  .nonempty("Password is required")
   .min(MIN_PASSWORD_LENGTH, `At least ${MIN_PASSWORD_LENGTH} characters long`)
+  .max(MAX_PASSWORD_LENGTH, `At most ${MAX_PASSWORD_LENGTH} characters long`)
+  .nonempty("Password is required")
   .regex(/[A-Z]/, "At least one uppercase letter")
   .regex(/[a-z]/, "At least one lowercase letter")
   .regex(/[0-9]/, "At least one number")
@@ -22,8 +28,9 @@ export const signUpFormSchema = loginFormSchema
   .extend({
     name: z
       .string()
-      .min(MIN_NAME_LENGTH, `At least ${MIN_NAME_LENGTH} characters long`)
       .trim()
+      .min(MIN_NAME_LENGTH, `At least ${MIN_NAME_LENGTH} characters long`)
+      .max(MAX_NAME_LENGTH, `At most ${MAX_NAME_LENGTH} characters long`)
       .nonempty("Name is required"),
     confirmPassword: z.string().trim().nonempty("Confirm Password is required"),
   })
