@@ -1,3 +1,4 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@parametric-ai/ui/components/button";
 import {
   Field,
@@ -35,7 +36,10 @@ import type { useDisclosure } from "@/hooks/use-disclosure";
 import { trpc } from "@/services/trpc";
 import { useCreateExperiment } from "../../hooks/use-create-experiment";
 import { MAX_TAGS } from "../../utils/const";
-import type { ExtendedCreateExperimentDto } from "../../utils/schema";
+import {
+  type ExtendedCreateExperimentDto,
+  extendedCreateExperimentSchema,
+} from "../../utils/schema";
 
 type CreateExperimentFormProps = Pick<
   ReturnType<typeof useDisclosure>,
@@ -51,7 +55,7 @@ export const CreateExperimentForm = ({ close }: CreateExperimentFormProps) => {
     },
   });
   const form = useForm<ExtendedCreateExperimentDto>({
-    // resolver: zodResolver(extendedCreateExperimentSchema),
+    resolver: zodResolver(extendedCreateExperimentSchema),
     defaultValues: {
       name: "",
       modelId: "",
@@ -115,7 +119,7 @@ export const CreateExperimentForm = ({ close }: CreateExperimentFormProps) => {
               <FieldContent>
                 <FieldLabel htmlFor="modelId">LLM Model</FieldLabel>
                 <FieldDescription>
-                  For best results, select the model you want to use.
+                  Select the model you want to use in this experiment
                 </FieldDescription>
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
@@ -126,15 +130,10 @@ export const CreateExperimentForm = ({ close }: CreateExperimentFormProps) => {
                 onValueChange={field.onChange}
                 value={field.value}
               >
-                <SelectTrigger
-                  aria-invalid={fieldState.invalid}
-                  className="min-w-[120px]"
-                  id="modelId"
-                >
-                  <SelectValue placeholder="Select" />
+                <SelectTrigger aria-invalid={fieldState.invalid} id="modelId">
+                  <SelectValue placeholder="Select model" />
                 </SelectTrigger>
                 <SelectContent position="item-aligned">
-                  <SelectItem value="auto">Auto</SelectItem>
                   <SelectSeparator />
                   {aiModels.data?.map((model) => (
                     <SelectItem key={model.id} value={model.id}>
@@ -252,21 +251,21 @@ export const CreateExperimentForm = ({ close }: CreateExperimentFormProps) => {
                       ))}
                     </InputGroupAddon>
                   )}
-                  {tagFields.length < MAX_TAGS && (
-                    <InputGroupInput
-                      aria-invalid={fieldState.invalid}
-                      id="tags"
-                      maxLength={MAX_EXPERIMENT_TAG_LENGTH}
-                      minLength={MIN_EXPERIMENT_TAG_LENGTH}
-                      onKeyDown={handleKeyDown}
-                      placeholder={
-                        tagFields.length
-                          ? "Add more..."
-                          : "Type a tag and press enter"
-                      }
-                      type="text"
-                    />
-                  )}
+
+                  <InputGroupInput
+                    aria-invalid={fieldState.invalid}
+                    disabled={tagFields.length >= MAX_TAGS}
+                    id="tags"
+                    maxLength={MAX_EXPERIMENT_TAG_LENGTH}
+                    minLength={MIN_EXPERIMENT_TAG_LENGTH}
+                    onKeyDown={handleKeyDown}
+                    placeholder={
+                      tagFields.length < MAX_TAGS
+                        ? "Type a tag and press enter"
+                        : "Max tags reached"
+                    }
+                    type="text"
+                  />
                 </InputGroup>
               </Field>
             );
