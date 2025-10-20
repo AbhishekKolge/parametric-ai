@@ -20,6 +20,7 @@ import {
 import type { inferProcedureOutput } from "@trpc/server";
 import { formatDistanceToNow } from "date-fns";
 import { Download, Trash2, TrendingUp } from "lucide-react";
+import Link from "next/link";
 import { useDisclosure } from "@/hooks/use-disclosure";
 import { DeleteExperimentAlert } from "../alerts/delete-experiment-alert";
 
@@ -93,9 +94,11 @@ export const ExperimentCard = ({
           </div>
         </CardContent>
         <CardFooter className="mt-auto gap-2">
-          <Button className="flex-1" variant="outline">
-            <TrendingUp />
-            Start Experiment
+          <Button asChild className="flex-1" variant="outline">
+            <Link href={`/experiment/${id}`}>
+              <TrendingUp />
+              Start Experiment
+            </Link>
           </Button>
           <Tooltip>
             <TooltipTrigger asChild>

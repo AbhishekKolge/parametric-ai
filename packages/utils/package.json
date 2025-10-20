@@ -17,6 +17,22 @@
     "./experiment/const": {
       "types": "./dist/experiment/const.d.ts",
       "default": "./src/experiment/const.ts"
+    },
+    "./prompt/const": {
+      "types": "./dist/prompt/const.d.ts",
+      "default": "./src/prompt/const.ts"
+    },
+    "./prompt/helper": {
+      "types": "./dist/prompt/helper.d.ts",
+      "default": "./src/prompt/helper.ts"
+    },
+    "./common/const": {
+      "types": "./dist/common/const.d.ts",
+      "default": "./src/common/const.ts"
+    },
+    "./common/helper": {
+      "types": "./dist/common/helper.d.ts",
+      "default": "./src/common/helper.ts"
     }
   },
   "scripts": {

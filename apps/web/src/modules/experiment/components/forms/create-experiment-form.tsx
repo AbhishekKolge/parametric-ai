@@ -24,19 +24,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@parametric-ai/ui/components/select";
+import { cn } from "@parametric-ai/ui/lib/utils";
 import {
   MAX_EXPERIMENT_TAG_LENGTH,
   MAX_TAGS_LENGTH,
   MIN_EXPERIMENT_TAG_LENGTH,
 } from "@parametric-ai/utils/experiment/const";
+import { EXPECTED_OUTPUT_TOKENS_DEFAULT } from "@parametric-ai/utils/prompt/const";
+import {
+  formatTokenDisplay,
+  validatePrompt,
+} from "@parametric-ai/utils/prompt/helper";
 import { useQuery } from "@tanstack/react-query";
 import { X } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import type { useDisclosure } from "@/hooks/use-disclosure";
 import { trpc } from "@/services/trpc";
 import { useCreateExperiment } from "../../hooks/use-create-experiment";
-
+import { getTokenUtilizationColorClasses } from "../../utils/helper";
 import {
   type ExtendedCreateExperimentDto,
   extendedCreateExperimentSchema,
@@ -48,11 +55,13 @@ type CreateExperimentFormProps = Pick<
 >;
 
 export const CreateExperimentForm = ({ toggle }: CreateExperimentFormProps) => {
+  const router = useRouter();
   const aiModelsQuery = useQuery(trpc.experiment.getAllAIModels.queryOptions());
   const createExperimentMutation = useCreateExperiment({
-    onSuccess: () => {
+    onSuccess: ({ data }) => {
       toggle();
       form.reset();
+      router.push(`/experiment/${data.id}`);
     },
   });
   const form = useForm<ExtendedCreateExperimentDto>({
@@ -84,6 +93,7 @@ export const CreateExperimentForm = ({ toggle }: CreateExperimentFormProps) => {
   };
 
   const selectedModelId = form.watch("modelId");
+  const promptValue = form.watch("prompt");
   const selectedModel = useMemo(() => {
     if (!aiModelsQuery.data?.data.models) {
       return null;
@@ -93,7 +103,17 @@ export const CreateExperimentForm = ({ toggle }: CreateExperimentFormProps) => {
     );
   }, [aiModelsQuery.data, selectedModelId]);
 
-  const maxPromptLength = selectedModel ? selectedModel.context_window : 0;
+  const tokenEstimation = useMemo(() => {
+    if (!selectedModel) {
+      return null;
+    }
+    return validatePrompt({
+      prompt: promptValue,
+      contextWindow: selectedModel.context_window,
+    });
+  }, [promptValue, selectedModel]);
+
+  const maxPromptLength = tokenEstimation?.maxPromptCharacters || 0;
 
   return (
     <>
@@ -157,11 +177,18 @@ export const CreateExperimentForm = ({ toggle }: CreateExperimentFormProps) => {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="prompt">Write a prompt</FieldLabel>
+                  <FieldDescription>
+                    Model capacity:{" "}
+                    {formatTokenDisplay(selectedModel.context_window)} tokens
+                    (reserving min.{" "}
+                    {formatTokenDisplay(EXPECTED_OUTPUT_TOKENS_DEFAULT)} for
+                    output)
+                  </FieldDescription>
                   <InputGroup>
                     <InputGroupTextarea
                       {...field}
                       aria-invalid={fieldState.invalid}
-                      className="min-h-24 resize-none"
+                      className="max-h-24 resize-none"
                       id="prompt"
                       maxLength={maxPromptLength}
                       placeholder="Enter experiment prompt"
@@ -169,12 +196,21 @@ export const CreateExperimentForm = ({ toggle }: CreateExperimentFormProps) => {
                     />
                     <InputGroupAddon align="block-end">
                       <InputGroupText className="tabular-nums">
-                        {field.value.length}/{maxPromptLength} characters
-                        (tokens)
+                        <span
+                          className={cn(
+                            getTokenUtilizationColorClasses(
+                              tokenEstimation?.utilizationPercentage
+                                ? tokenEstimation.utilizationPercentage
+                                : 0
+                            )
+                          )}
+                        >
+                          {field.value.length} / {maxPromptLength}
+                        </span>
+                        <span>characters</span>
                       </InputGroupText>
                     </InputGroupAddon>
                   </InputGroup>
-
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
                   )}

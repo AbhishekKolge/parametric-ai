@@ -99,7 +99,11 @@ export const ExperimentList = () => {
         {renderMultiQuery([experimentsQuery, aiModelsQuery], {
           isEmpty: ([data]) => !data.data.experiments.length,
           EmptyStateView: (
-            <EmptyBlock className="h-full" message="No experiments found" />
+            <EmptyBlock
+              className="h-full"
+              message="Try adding new experiments to track them here"
+              title="No experiments found"
+            />
           ),
           ErrorStateView: (error) => (
             <ErrorBlock
