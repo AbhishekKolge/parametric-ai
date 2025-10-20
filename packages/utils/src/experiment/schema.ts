@@ -82,3 +82,9 @@ export const experimentQuerySchema = z.object({
 });
 
 export type ExperimentQueryDto = z.infer<typeof experimentQuerySchema>;
+
+export const deleteExperimentSchema = z.object({
+  id: z.string().trim().nonempty("Experiment ID is required"),
+});
+
+export type DeleteExperimentDto = z.infer<typeof deleteExperimentSchema>;

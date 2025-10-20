@@ -3,8 +3,10 @@
 import prisma, { type Prisma } from "@parametric-ai/db";
 import type {
   CreateExperimentDto,
+  DeleteExperimentDto,
   ExperimentQueryDto,
 } from "@parametric-ai/utils/experiment/schema";
+import { TRPCError } from "@trpc/server";
 import type { Context } from "../../context";
 
 // const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
@@ -229,5 +231,30 @@ export const getAll = async ({
       totalCount,
     },
     message: "Experiments fetched successfully",
+  };
+};
+
+export const deleteOne = async ({
+  ctx,
+  input,
+}: {
+  ctx: Context;
+  input: DeleteExperimentDto;
+}) => {
+  const userId = (ctx.session as NonNullable<Context["session"]>).user.id;
+
+  const result = await prisma.experiment.deleteMany({
+    where: { id: input.id, userId },
+  });
+
+  if (!result.count) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: "Experiment not found",
+    });
+  }
+
+  return {
+    message: "Experiment deleted successfully",
   };
 };

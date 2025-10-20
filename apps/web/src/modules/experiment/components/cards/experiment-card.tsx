@@ -1,3 +1,5 @@
+"use client";
+
 import type { AppRouter } from "@parametric-ai/api/router";
 import { Badge } from "@parametric-ai/ui/components/badge";
 import { Button } from "@parametric-ai/ui/components/button";
@@ -18,6 +20,8 @@ import {
 import type { inferProcedureOutput } from "@trpc/server";
 import { formatDistanceToNow } from "date-fns";
 import { Download, Trash2, TrendingUp } from "lucide-react";
+import { useDisclosure } from "@/hooks/use-disclosure";
+import { DeleteExperimentAlert } from "../alerts/delete-experiment-alert";
 
 export type ExperimentsOutput = inferProcedureOutput<
   AppRouter["experiment"]["getAll"]
@@ -40,74 +44,86 @@ export const ExperimentCard = ({
   _count,
   updatedAt,
   tags,
-}: ExperimentCardProps) => (
-  <Card className="hover:border-foreground">
-    <CardHeader>
-      <CardTitle className="line-clamp-1 text-ellipsis text-lg">
-        {name}
-      </CardTitle>
-      <CardDescription className="line-clamp-1 text-ellipsis text-sm">
-        {prompt}
-      </CardDescription>
-    </CardHeader>
-    <CardContent className="flex flex-col gap-4">
-      <div className="grid grid-cols-3 text-sm">
-        <div className="flex flex-col gap-1">
-          <span>Responses</span>
-          <span className="font-medium text-muted-foreground">
-            {_count.responses}
-          </span>
-        </div>
-        <div className="flex flex-col gap-1">
-          <span>Created At</span>
-          <span className="font-medium text-muted-foreground">
-            {formatDistanceToNow(createdAt, { addSuffix: true })}
-          </span>
-        </div>
-        <div className="flex flex-col gap-1">
-          <span>Updated At</span>
-          <span className="font-medium text-muted-foreground">
-            {formatDistanceToNow(updatedAt, { addSuffix: true })}
-          </span>
-        </div>
-      </div>
-      <div className="flex flex-col gap-1 text-sm">
-        <span>AI Model</span>
-        <span className="font-medium text-muted-foreground">
-          {model.id} ({model.owned_by})
-        </span>
-      </div>
-      <div className="flex flex-wrap items-center gap-2">
-        {tags.map((tag) => (
-          <Badge key={tag}>{tag}</Badge>
-        ))}
-      </div>
-    </CardContent>
-    <CardFooter className="mt-auto gap-2">
-      <Button className="flex-1" variant="outline">
-        <TrendingUp />
-        Start Experiment
-      </Button>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button variant="ghost">
-            <Download />
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>Download</TooltipContent>
-      </Tooltip>
+  id,
+}: ExperimentCardProps) => {
+  const deleteExperimentDisclosure = useDisclosure({});
 
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button variant="ghost">
-            <Trash2 className="text-destructive" />
+  return (
+    <>
+      <Card className="hover:border-foreground">
+        <CardHeader>
+          <CardTitle className="line-clamp-1 text-ellipsis text-lg">
+            {name}
+          </CardTitle>
+          <CardDescription className="line-clamp-1 text-ellipsis text-sm">
+            {prompt}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-4">
+          <div className="grid grid-cols-3 text-sm">
+            <div className="flex flex-col gap-1">
+              <span>Responses</span>
+              <span className="font-medium text-muted-foreground">
+                {_count.responses}
+              </span>
+            </div>
+            <div className="flex flex-col gap-1">
+              <span>Created At</span>
+              <span className="font-medium text-muted-foreground">
+                {formatDistanceToNow(createdAt, { addSuffix: true })}
+              </span>
+            </div>
+            <div className="flex flex-col gap-1">
+              <span>Updated At</span>
+              <span className="font-medium text-muted-foreground">
+                {formatDistanceToNow(updatedAt, { addSuffix: true })}
+              </span>
+            </div>
+          </div>
+          <div className="flex flex-col gap-1 text-sm">
+            <span>AI Model</span>
+            <span className="font-medium text-muted-foreground">
+              {model.id} ({model.owned_by})
+            </span>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            {tags.map((tag) => (
+              <Badge key={tag}>{tag}</Badge>
+            ))}
+          </div>
+        </CardContent>
+        <CardFooter className="mt-auto gap-2">
+          <Button className="flex-1" variant="outline">
+            <TrendingUp />
+            Start Experiment
           </Button>
-        </TooltipTrigger>
-        <TooltipContent>Delete</TooltipContent>
-      </Tooltip>
-    </CardFooter>
-  </Card>
-);
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="ghost">
+                <Download />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Download</TooltipContent>
+          </Tooltip>
+
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button onClick={deleteExperimentDisclosure.open} variant="ghost">
+                <Trash2 className="text-destructive" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Delete</TooltipContent>
+          </Tooltip>
+        </CardFooter>
+      </Card>
+      <DeleteExperimentAlert
+        {...deleteExperimentDisclosure}
+        id={id}
+        name={name}
+      />
+    </>
+  );
+};
 
 export const ExperimentCardLoading = () => (
   <Card className="hover:border-foreground">
