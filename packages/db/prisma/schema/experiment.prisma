@@ -1,5 +1,5 @@
 model Experiment {
-    id        String     @id @map("_id")
+    id        String     @id @default(uuid()) @map("_id")
     name      String
     modelId   String
     prompt    String
@@ -10,7 +10,8 @@ model Experiment {
     updatedAt DateTime   @updatedAt
     responses Response[]
 
-    @@unique([prompt])
+    @@unique([userId, prompt])
+    @@unique([userId, name])
     @@index([name])
     @@index([createdAt(sort: Desc)])
     @@index([modelId])
@@ -20,7 +21,7 @@ model Experiment {
 }
 
 model Response {
-    id               String     @id @map("_id")
+    id               String     @id @default(uuid()) @map("_id")
     experimentId     String
     experiment       Experiment @relation(fields: [experimentId], references: [id], onDelete: Cascade)
     temperature      Float

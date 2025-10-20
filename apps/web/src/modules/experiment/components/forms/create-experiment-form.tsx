@@ -21,12 +21,12 @@ import {
   Select,
   SelectContent,
   SelectItem,
-  SelectSeparator,
   SelectTrigger,
   SelectValue,
 } from "@parametric-ai/ui/components/select";
 import {
   MAX_EXPERIMENT_TAG_LENGTH,
+  MAX_TAGS_LENGTH,
   MIN_EXPERIMENT_TAG_LENGTH,
 } from "@parametric-ai/utils/experiment/const";
 import { useQuery } from "@tanstack/react-query";
@@ -36,7 +36,7 @@ import { Controller, useFieldArray, useForm } from "react-hook-form";
 import type { useDisclosure } from "@/hooks/use-disclosure";
 import { trpc } from "@/services/trpc";
 import { useCreateExperiment } from "../../hooks/use-create-experiment";
-import { MAX_TAGS } from "../../utils/const";
+
 import {
   type ExtendedCreateExperimentDto,
   extendedCreateExperimentSchema,
@@ -48,7 +48,7 @@ type CreateExperimentFormProps = Pick<
 >;
 
 export const CreateExperimentForm = ({ toggle }: CreateExperimentFormProps) => {
-  const aiModels = useQuery(trpc.experiment.getAllAIModels.queryOptions());
+  const aiModelsQuery = useQuery(trpc.experiment.getAllAIModels.queryOptions());
   const createExperimentMutation = useCreateExperiment({
     onSuccess: () => {
       toggle();
@@ -85,11 +85,13 @@ export const CreateExperimentForm = ({ toggle }: CreateExperimentFormProps) => {
 
   const selectedModelId = form.watch("modelId");
   const selectedModel = useMemo(() => {
-    if (!aiModels.data) {
+    if (!aiModelsQuery.data?.data.models) {
       return null;
     }
-    return aiModels.data.find((model) => model.id === selectedModelId);
-  }, [aiModels.data, selectedModelId]);
+    return aiModelsQuery.data.data.models.find(
+      (model) => model.id === selectedModelId
+    );
+  }, [aiModelsQuery.data, selectedModelId]);
 
   const maxPromptLength = selectedModel ? selectedModel.context_window : 0;
 
@@ -138,8 +140,7 @@ export const CreateExperimentForm = ({ toggle }: CreateExperimentFormProps) => {
                     <SelectValue placeholder="Select model" />
                   </SelectTrigger>
                   <SelectContent position="item-aligned">
-                    <SelectSeparator />
-                    {aiModels.data?.map((model) => (
+                    {aiModelsQuery.data?.data.models.map((model) => (
                       <SelectItem key={model.id} value={model.id}>
                         {model.id} ({model.owned_by})
                       </SelectItem>
@@ -195,7 +196,7 @@ export const CreateExperimentForm = ({ toggle }: CreateExperimentFormProps) => {
                   !trimmedInputValue ||
                   trimmedInputValue.length > MAX_EXPERIMENT_TAG_LENGTH ||
                   trimmedInputValue.length < MIN_EXPERIMENT_TAG_LENGTH ||
-                  tagFields.length >= MAX_TAGS
+                  tagFields.length >= MAX_TAGS_LENGTH
                 ) {
                   return;
                 }
@@ -228,7 +229,8 @@ export const CreateExperimentForm = ({ toggle }: CreateExperimentFormProps) => {
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="tags">Tags</FieldLabel>
                   <FieldDescription>
-                    Add upto {MAX_TAGS} tags to help organize your experiments
+                    Add upto {MAX_TAGS_LENGTH} tags to help organize your
+                    experiments
                   </FieldDescription>
                   <InputGroup>
                     {!!tagFields.length && (
@@ -261,13 +263,13 @@ export const CreateExperimentForm = ({ toggle }: CreateExperimentFormProps) => {
 
                     <InputGroupInput
                       aria-invalid={fieldState.invalid}
-                      disabled={tagFields.length >= MAX_TAGS}
+                      disabled={tagFields.length >= MAX_TAGS_LENGTH}
                       id="tags"
                       maxLength={MAX_EXPERIMENT_TAG_LENGTH}
                       minLength={MIN_EXPERIMENT_TAG_LENGTH}
                       onKeyDown={handleKeyDown}
                       placeholder={
-                        tagFields.length < MAX_TAGS
+                        tagFields.length < MAX_TAGS_LENGTH
                           ? "Type a tag and press enter"
                           : "Max tags reached"
                       }

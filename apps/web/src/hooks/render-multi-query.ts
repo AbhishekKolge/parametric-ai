@@ -1,36 +1,43 @@
+import type { AppRouter } from "@parametric-ai/api/router";
 import type { UseQueryResult } from "@tanstack/react-query";
-import type { TRPCDefaultErrorShape } from "@trpc/server";
+import type { TRPCClientErrorLike } from "@trpc/client";
 
-type MultiStateViews<TTuple extends readonly unknown[]> = {
+type MultiStateViews<
+  TTuple extends readonly unknown[],
+  TError = TRPCClientErrorLike<AppRouter>,
+> = {
   LoadingStateView: React.JSX.Element;
-  ErrorStateView:
-    | React.JSX.Element
-    | ((error: TRPCDefaultErrorShape) => React.JSX.Element);
+  ErrorStateView: React.JSX.Element | ((error: TError) => React.JSX.Element);
   showErrorState?: boolean;
   EmptyStateView?: React.JSX.Element;
   SuccessStateView: (
     data: { [K in keyof TTuple]: NonNullable<TTuple[K]> },
-    queries: { [K in keyof TTuple]: UseQueryResult<TTuple[K]> }
+    queries: { [K in keyof TTuple]: UseQueryResult<TTuple[K], TError> }
   ) => React.JSX.Element;
   isEmpty?: (data: { [K in keyof TTuple]: NonNullable<TTuple[K]> }) => boolean;
 };
 
-export function renderMultiQuery<TTuple extends readonly unknown[]>(
-  queries: { [K in keyof TTuple]: UseQueryResult<TTuple[K]> },
-  {
+export function renderMultiQuery<
+  TTuple extends readonly unknown[],
+  TError = TRPCClientErrorLike<AppRouter>,
+>(
+  queries: { [K in keyof TTuple]: UseQueryResult<TTuple[K], TError> },
+  views: MultiStateViews<TTuple, TError>
+) {
+  const {
     LoadingStateView,
     ErrorStateView,
     EmptyStateView,
     SuccessStateView,
     isEmpty: customIsEmpty,
     showErrorState,
-  }: MultiStateViews<TTuple>
-): React.JSX.Element {
+  } = views;
+
   const erroredQuery = queries.find((q) => q.isError);
   if (showErrorState || erroredQuery) {
-    const error = erroredQuery?.error as TRPCDefaultErrorShape | undefined;
+    const error = erroredQuery?.error as TError;
     return typeof ErrorStateView === "function"
-      ? ErrorStateView(error as TRPCDefaultErrorShape)
+      ? ErrorStateView(error)
       : ErrorStateView;
   }
 
@@ -50,7 +57,7 @@ export function renderMultiQuery<TTuple extends readonly unknown[]>(
   const isEmpty =
     customIsEmpty?.(
       allData as { [K in keyof TTuple]: NonNullable<TTuple[K]> }
-    ) ?? allData.every((item) => isDefaultEmpty(item));
+    ) ?? allData.every(isDefaultEmpty);
 
   if (isEmpty && EmptyStateView) {
     return EmptyStateView;
@@ -58,12 +65,15 @@ export function renderMultiQuery<TTuple extends readonly unknown[]>(
 
   return SuccessStateView(
     allData as { [K in keyof TTuple]: NonNullable<TTuple[K]> },
-    queries as { [K in keyof TTuple]: UseQueryResult<TTuple[K]> }
+    queries as { [K in keyof TTuple]: UseQueryResult<TTuple[K], TError> }
   );
 }
 
-export function firstErrorRefetch<TTuple extends readonly unknown[]>(
-  queries: { [K in keyof TTuple]: UseQueryResult<TTuple[K]> }
+export function firstErrorRefetch<
+  TTuple extends readonly unknown[],
+  TError = TRPCClientErrorLike<AppRouter>,
+>(
+  queries: { [K in keyof TTuple]: UseQueryResult<TTuple[K], TError> }
 ): () => Promise<unknown> | null {
   const errored = queries.find((q) => q.isError);
   return errored ? errored.refetch : () => null;

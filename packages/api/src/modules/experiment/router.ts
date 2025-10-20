@@ -1,8 +1,12 @@
-import { createExperimentSchema } from "@parametric-ai/utils/experiment/schema";
+import {
+  createExperimentSchema,
+  experimentQuerySchema,
+} from "@parametric-ai/utils/experiment/schema";
 import { protectedProcedure, router } from "../../index";
-import { create, getAllAIModels } from "./controller";
+import { create, getAll, getAllAIModels } from "./controller";
 
 export const experimentRouter = router({
   getAllAIModels: protectedProcedure.query(getAllAIModels),
   create: protectedProcedure.input(createExperimentSchema).mutation(create),
+  getAll: protectedProcedure.input(experimentQuerySchema).query(getAll),
 });

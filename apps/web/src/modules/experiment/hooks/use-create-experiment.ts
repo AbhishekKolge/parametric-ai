@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 
 import { toast } from "sonner";
-import { trpc } from "@/services/trpc";
+import { queryClient, trpc } from "@/services/trpc";
 
 export const useCreateExperiment = (
   opts?: Parameters<typeof trpc.experiment.create.mutationOptions>[0]
@@ -11,6 +11,9 @@ export const useCreateExperiment = (
       ...opts,
       onSuccess: (...args) => {
         toast.success("Experiment created successfully");
+        queryClient.invalidateQueries({
+          queryKey: trpc.experiment.getAll.queryKey(),
+        });
         opts?.onSuccess?.(...args);
       },
       onError: (...args) => {

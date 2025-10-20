@@ -7,3 +7,4 @@ export const disconnectDB = async () => {
 };
 
 export default prisma;
+export type { Prisma } from "../prisma/generated/client";

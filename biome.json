@@ -22,7 +22,12 @@
       "!**/.source"
     ]
   },
-  "extends": [
-    "ultracite"
-  ]
+  "extends": ["ultracite"],
+  "linter": {
+    "rules": {
+      "correctness": {
+        "noNestedComponentDefinitions": "off"
+      }
+    }
+  }
 }

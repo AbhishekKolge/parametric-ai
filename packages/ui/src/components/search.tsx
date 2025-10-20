@@ -7,7 +7,7 @@ import { InputGroup, InputGroupAddon, InputGroupInput } from "./input-group";
 
 type SearchProps = React.ComponentProps<typeof InputGroupInput> & {
   search?: string;
-  setSearch?: React.Dispatch<React.SetStateAction<string>>;
+  setSearch?: (value: string) => void;
   inputGroupProps: React.ComponentProps<typeof InputGroup>;
 };
 
