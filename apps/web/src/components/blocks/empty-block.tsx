@@ -16,8 +16,12 @@ export const EmptyBlock = ({
   >
     <SearchX size={60} />
     <div className="flex flex-col items-center gap-2">
-      <h5 className="text-xl">{title}</h5>
-      {message && <p className="text-muted-foreground text-sm">{message}</p>}
+      <h5 className="text-center text-lg md:text-xl">{title}</h5>
+      {message && (
+        <p className="text-center text-muted-foreground text-xs md:text-sm">
+          {message}
+        </p>
+      )}
     </div>
   </div>
 );

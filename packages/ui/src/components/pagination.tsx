@@ -47,7 +47,7 @@ export const Pagination = ({
   return (
     <div className="mt-auto flex flex-col gap-4">
       <Separator />
-      <div className="flex items-center justify-between gap-6">
+      <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
         <p className="font-light text-sm">
           Showing {startIndex} - {endIndex} of {totalCount} {label}
         </p>
@@ -73,7 +73,7 @@ export const Pagination = ({
 
 export function PaginationLoading() {
   return (
-    <div className="flex items-center justify-between gap-6">
+    <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
       <Skeleton className="h-5 w-56" />
       <div className="flex items-center gap-2">
         <Skeleton className="size-6" />

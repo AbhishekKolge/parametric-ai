@@ -53,12 +53,12 @@ export const ExperimentList = () => {
 
   return (
     <>
-      <div className="flex h-full flex-col gap-8">
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
+      <div className="flex h-full flex-col gap-6 md:gap-8">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="grid flex-col gap-4 md:grid-cols-2 lg:flex lg:flex-row lg:items-center">
             <Search
               inputGroupProps={{
-                className: "w-2xs",
+                className: "lg:w-2xs",
               }}
               search={filters.search}
               setSearch={setSearch}
@@ -74,7 +74,7 @@ export const ExperimentList = () => {
               />
             </div>
             <Select onValueChange={setSortBy} value={filters.sortBy}>
-              <SelectTrigger>
+              <SelectTrigger className="w-full lg:w-fit">
                 <SelectValue placeholder="Sort by" />
               </SelectTrigger>
               <SelectContent position="item-aligned">
@@ -83,7 +83,7 @@ export const ExperimentList = () => {
               </SelectContent>
             </Select>
             <Select onValueChange={setOrder} value={filters.order}>
-              <SelectTrigger>
+              <SelectTrigger className="w-full lg:w-fit">
                 <SelectValue placeholder="Order" />
               </SelectTrigger>
               <SelectContent position="item-aligned">
@@ -114,7 +114,7 @@ export const ExperimentList = () => {
           ),
           LoadingStateView: (
             <>
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {Array.from({ length: DEFAULT_EXPERIMENT_LIMIT }).map(() => (
                   <ExperimentCardLoading key={crypto.randomUUID()} />
                 ))}
@@ -132,7 +132,7 @@ export const ExperimentList = () => {
           ),
           SuccessStateView: ([experimentsData]) => (
             <>
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {experimentsData.data.experiments.map((experiment) => (
                   <ExperimentCard key={experiment.id} {...experiment} />
                 ))}

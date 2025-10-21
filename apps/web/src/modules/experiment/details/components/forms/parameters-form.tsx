@@ -125,7 +125,7 @@ export const ParametersForm = () => {
     ),
     LoadingStateView: <ParametersFormLoading />,
     SuccessStateView: ([experimentData]) => (
-      <Card className="w-full sm:max-w-md">
+      <Card className="w-full sm:max-w-none lg:max-w-md">
         <CardHeader>
           <CardTitle>{experimentData.data.experiment.name}</CardTitle>
           <CardDescription>
@@ -279,7 +279,7 @@ export const ParametersForm = () => {
 };
 
 export const ParametersFormLoading = () => (
-  <Card className="w-full sm:max-w-md">
+  <Card className="w-full sm:max-w-none lg:max-w-md">
     <CardHeader>
       <CardTitle>
         <Skeleton className="h-4 w-28" />

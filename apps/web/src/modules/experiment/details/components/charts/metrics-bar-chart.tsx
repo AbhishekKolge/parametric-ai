@@ -15,11 +15,15 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@parametric-ai/ui/components/chart";
+import { useIsMobile } from "@parametric-ai/ui/hooks/use-mobile";
 import type { inferProcedureOutput } from "@trpc/server";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
-import { MAX_VISIBLE_METRIC_BARS } from "../../utils/const";
+import {
+  MAX_VISIBLE_METRIC_BARS,
+  MOBILE_MAX_VISIBLE_METRIC_BARS,
+} from "../../utils/const";
 import { formatNumber } from "../../utils/helper";
 
 export type metricsOutput = inferProcedureOutput<
@@ -31,6 +35,7 @@ export type MetricsBarChartProps = {
 };
 
 export const MetricsBarChart = ({ metrics }: MetricsBarChartProps) => {
+  const isMobile = useIsMobile();
   const [startIndex, setStartIndex] = useState(0);
 
   const chartData = metrics.map((r, index) => ({
@@ -57,7 +62,9 @@ export const MetricsBarChart = ({ metrics }: MetricsBarChartProps) => {
     },
   } satisfies ChartConfig;
 
-  const endIndex = startIndex + MAX_VISIBLE_METRIC_BARS;
+  const endIndex =
+    startIndex +
+    (isMobile ? MOBILE_MAX_VISIBLE_METRIC_BARS : MAX_VISIBLE_METRIC_BARS);
   const visibleData = chartData.slice(startIndex, endIndex);
 
   const canNavigateLeft = startIndex > 0;
@@ -69,7 +76,11 @@ export const MetricsBarChart = ({ metrics }: MetricsBarChartProps) => {
 
   const navigateRightHandler = () => {
     setStartIndex((previousIndex) =>
-      Math.min(chartData.length - MAX_VISIBLE_METRIC_BARS, previousIndex + 1)
+      Math.min(
+        chartData.length -
+          (isMobile ? MOBILE_MAX_VISIBLE_METRIC_BARS : MAX_VISIBLE_METRIC_BARS),
+        previousIndex + 1
+      )
     );
   };
 
@@ -77,7 +88,10 @@ export const MetricsBarChart = ({ metrics }: MetricsBarChartProps) => {
     <Card>
       <CardHeader>
         <div className="flex items-center justify-end gap-4">
-          {chartData.length > MAX_VISIBLE_METRIC_BARS && (
+          {chartData.length >
+            (isMobile
+              ? MOBILE_MAX_VISIBLE_METRIC_BARS
+              : MAX_VISIBLE_METRIC_BARS) && (
             <>
               <Button
                 disabled={!canNavigateLeft}
@@ -100,7 +114,7 @@ export const MetricsBarChart = ({ metrics }: MetricsBarChartProps) => {
         </div>
       </CardHeader>
       <CardContent>
-        <ChartContainer className="h-80 w-full" config={chartConfig}>
+        <ChartContainer className="h-50 w-full md:h-80" config={chartConfig}>
           <BarChart accessibilityLayer data={visibleData}>
             <CartesianGrid />
             <XAxis
@@ -113,7 +127,7 @@ export const MetricsBarChart = ({ metrics }: MetricsBarChartProps) => {
               content={<ChartTooltipContent indicator="dashed" />}
               cursor={false}
             />
-            <ChartLegend content={<ChartLegendContent />} />
+            {!isMobile && <ChartLegend content={<ChartLegendContent />} />}
             <Bar dataKey="coherence" fill="var(--chart-1)" radius={4} />
             <Bar dataKey="relevance" fill="var(--chart-2)" radius={4} />
             <Bar dataKey="creativity" fill="var(--chart-3)" radius={4} />

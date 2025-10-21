@@ -800,7 +800,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                 "flex h-auto min-h-9 items-center justify-between rounded-md border border-input p-1 hover:bg-inherit dark:bg-input/30 dark:hover:bg-input/50 [&_svg]:pointer-events-auto",
                 autoSize ? "w-auto" : "w-full",
                 responsiveSettings.compactMode && "min-h-8 text-sm",
-                screenSize === "mobile" && "min-h-12 text-base",
+                screenSize === "mobile" && "text-base",
                 disabled && "cursor-not-allowed opacity-50",
                 className
               )}

@@ -66,7 +66,7 @@ export const ResponseCard = ({
     toast.info("Response copied to clipboard");
   };
   return (
-    <Card>
+    <Card className="@container">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>
@@ -87,7 +87,7 @@ export const ResponseCard = ({
         </pre>
       </CardContent>
       <CardFooter className="flex-col items-start gap-4">
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {Object.entries(retypedMetrics).map(([key, value]) => {
             if (!BADGE_METRICS_KEYS.includes(key as keyof ResponseMetrics)) {
               return null;
@@ -131,7 +131,7 @@ export const ResponseCard = ({
           <AccordionItem value="performance-metrics">
             <AccordionTrigger>Performance Metrics</AccordionTrigger>
             <AccordionContent>
-              <ul className="grid grid-cols-3 gap-2">
+              <ul className="grid @lg:grid-cols-3 @md:grid-cols-2 gap-2">
                 {Object.entries(retypedMetrics).map(([key, value]) => {
                   if (
                     !PERFORMANCE_METRICS_KEYS.includes(

@@ -36,10 +36,10 @@ export const ResponseList = () => {
   );
 
   return (
-    <section className="flex h-full flex-col gap-8">
-      <div className="flex items-center gap-4">
+    <section className="flex h-full flex-col gap-6 md:gap-8">
+      <div className="flex flex-col items-center gap-4 md:flex-row">
         <Select onValueChange={setSortBy} value={filters.sortBy}>
-          <SelectTrigger>
+          <SelectTrigger className="w-full md:w-fit">
             <SelectValue placeholder="Sort by" />
           </SelectTrigger>
           <SelectContent position="item-aligned">
@@ -52,7 +52,7 @@ export const ResponseList = () => {
           </SelectContent>
         </Select>
         <Select onValueChange={setOrder} value={filters.order}>
-          <SelectTrigger>
+          <SelectTrigger className="w-full md:w-fit">
             <SelectValue placeholder="Order" />
           </SelectTrigger>
           <SelectContent position="item-aligned">

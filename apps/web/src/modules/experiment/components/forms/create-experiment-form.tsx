@@ -175,7 +175,7 @@ export const CreateExperimentForm = ({ toggle }: CreateExperimentFormProps) => {
               </Field>
             )}
           />
-          {!!selectedModel && (
+          {!!selectedModel.id && (
             <Controller
               control={form.control}
               name="prompt"

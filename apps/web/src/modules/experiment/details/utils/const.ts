@@ -65,3 +65,4 @@ export const PERFORMANCE_METRICS_UNITS: Partial<
 };
 
 export const MAX_VISIBLE_METRIC_BARS = 5;
+export const MOBILE_MAX_VISIBLE_METRIC_BARS = 2;

@@ -15,11 +15,15 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@parametric-ai/ui/components/chart";
+import { useIsMobile } from "@parametric-ai/ui/hooks/use-mobile";
 import type { inferProcedureOutput } from "@trpc/server";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
-import { MAX_VISIBLE_METRIC_BARS } from "../../utils/const";
+import {
+  MAX_VISIBLE_METRIC_BARS,
+  MOBILE_MAX_VISIBLE_METRIC_BARS,
+} from "../../utils/const";
 import { formatNumber } from "../../utils/helper";
 
 export type metricsOutput = inferProcedureOutput<
@@ -31,6 +35,7 @@ export type MetricsLineChartProps = {
 };
 
 export const MetricsLineChart = ({ metrics }: MetricsLineChartProps) => {
+  const isMobile = useIsMobile();
   const [startIndex, setStartIndex] = useState(0);
 
   const chartData = metrics.map((r, idx) => ({
@@ -56,7 +61,9 @@ export const MetricsLineChart = ({ metrics }: MetricsLineChartProps) => {
     },
   } satisfies ChartConfig;
 
-  const endIndex = startIndex + MAX_VISIBLE_METRIC_BARS;
+  const endIndex =
+    startIndex +
+    (isMobile ? MOBILE_MAX_VISIBLE_METRIC_BARS : MAX_VISIBLE_METRIC_BARS);
   const visibleData = chartData.slice(startIndex, endIndex);
 
   const canNavigateLeft = startIndex > 0;
@@ -68,7 +75,11 @@ export const MetricsLineChart = ({ metrics }: MetricsLineChartProps) => {
 
   const navigateRightHandler = () => {
     setStartIndex((previousIndex) =>
-      Math.min(chartData.length - MAX_VISIBLE_METRIC_BARS, previousIndex + 1)
+      Math.min(
+        chartData.length -
+          (isMobile ? MOBILE_MAX_VISIBLE_METRIC_BARS : MAX_VISIBLE_METRIC_BARS),
+        previousIndex + 1
+      )
     );
   };
 
@@ -76,7 +87,10 @@ export const MetricsLineChart = ({ metrics }: MetricsLineChartProps) => {
     <Card>
       <CardHeader>
         <div className="flex items-center justify-end gap-4">
-          {chartData.length > MAX_VISIBLE_METRIC_BARS && (
+          {chartData.length >
+            (isMobile
+              ? MOBILE_MAX_VISIBLE_METRIC_BARS
+              : MAX_VISIBLE_METRIC_BARS) && (
             <>
               <Button
                 disabled={!canNavigateLeft}
@@ -99,7 +113,7 @@ export const MetricsLineChart = ({ metrics }: MetricsLineChartProps) => {
         </div>
       </CardHeader>
       <CardContent>
-        <ChartContainer className="h-80 w-full" config={chartConfig}>
+        <ChartContainer className="h-50 w-full md:h-80" config={chartConfig}>
           <LineChart
             accessibilityLayer
             data={visibleData}
@@ -116,7 +130,7 @@ export const MetricsLineChart = ({ metrics }: MetricsLineChartProps) => {
               tickMargin={10}
             />
             <ChartTooltip content={<ChartTooltipContent />} cursor={false} />
-            <ChartLegend content={<ChartLegendContent />} />
+            {!isMobile && <ChartLegend content={<ChartLegendContent />} />}
             <Line
               dataKey="coherence"
               dot={false}

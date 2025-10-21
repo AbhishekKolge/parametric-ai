@@ -50,7 +50,7 @@ export const ExperimentCard = ({
 
   return (
     <>
-      <Card className="hover:border-foreground">
+      <Card className="@container hover:border-foreground">
         <CardHeader>
           <CardTitle className="line-clamp-1 text-ellipsis text-lg">
             {name}
@@ -60,20 +60,20 @@ export const ExperimentCard = ({
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
-          <div className="grid grid-cols-3 text-sm">
-            <div className="flex flex-col gap-1">
+          <div className="grid @md:grid-cols-3 gap-2 text-sm">
+            <div className="flex @md:flex-col @md:justify-start justify-between @md:gap-1 gap-2">
               <span>Responses</span>
               <span className="font-medium text-muted-foreground">
                 {_count.responses}
               </span>
             </div>
-            <div className="flex flex-col gap-1">
+            <div className="flex @md:flex-col @md:justify-start justify-between @md:gap-1 gap-2">
               <span>Created At</span>
               <span className="font-medium text-muted-foreground">
                 {formatDistanceToNow(createdAt, { addSuffix: true })}
               </span>
             </div>
-            <div className="flex flex-col gap-1">
+            <div className="flex @md:flex-col @md:justify-start justify-between @md:gap-1 gap-2">
               <span>Updated At</span>
               <span className="font-medium text-muted-foreground">
                 {formatDistanceToNow(updatedAt, { addSuffix: true })}
@@ -92,7 +92,7 @@ export const ExperimentCard = ({
             ))}
           </div>
         </CardContent>
-        <CardFooter className="mt-auto gap-2">
+        <CardFooter className="mt-auto @md:flex-row flex-col @md:items-center items-stretch gap-2">
           <Button asChild className="flex-1" variant="outline">
             <Link href={`/experiment/${id}`}>
               <TrendingUp />
@@ -101,7 +101,7 @@ export const ExperimentCard = ({
           </Button>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost">
+              <Button variant="outline">
                 <Download />
               </Button>
             </TooltipTrigger>
@@ -110,7 +110,10 @@ export const ExperimentCard = ({
 
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button onClick={deleteExperimentDisclosure.open} variant="ghost">
+              <Button
+                onClick={deleteExperimentDisclosure.open}
+                variant="outline"
+              >
                 <Trash2 className="text-destructive" />
               </Button>
             </TooltipTrigger>
@@ -128,7 +131,7 @@ export const ExperimentCard = ({
 };
 
 export const ExperimentCardLoading = () => (
-  <Card className="hover:border-foreground">
+  <Card className="@container hover:border-foreground">
     <CardHeader>
       <CardTitle className="line-clamp-1 text-ellipsis text-lg">
         <Skeleton className="h-7 w-32" />
@@ -138,9 +141,12 @@ export const ExperimentCardLoading = () => (
       </CardDescription>
     </CardHeader>
     <CardContent className="flex flex-col gap-4">
-      <div className="grid grid-cols-3 text-sm">
+      <div className="grid @md:grid-cols-3 gap-2 text-sm">
         {Array.from({ length: 3 }).map(() => (
-          <div className="flex flex-col gap-1" key={crypto.randomUUID()}>
+          <div
+            className="flex @md:flex-col @md:justify-start justify-between @md:gap-1 gap-2"
+            key={crypto.randomUUID()}
+          >
             <Skeleton className="h-5 w-20" />
             <Skeleton className="h-5 w-14" />
           </div>
@@ -156,10 +162,10 @@ export const ExperimentCardLoading = () => (
         <Skeleton className="h-[22px] w-20" />
       </div>
     </CardContent>
-    <CardFooter className="mt-auto gap-2">
-      <Skeleton className="h-9 flex-1" />
-      <Skeleton className="h-9 w-9" />
-      <Skeleton className="h-9 w-9" />
+    <CardFooter className="mt-auto @md:flex-row flex-col @md:items-center items-stretch gap-2">
+      <Skeleton className="h-9 w-full @md:flex-1" />
+      <Skeleton className="h-9 @md:w-9 w-full" />
+      <Skeleton className="h-9 @md:w-9 w-full" />
     </CardFooter>
   </Card>
 );
