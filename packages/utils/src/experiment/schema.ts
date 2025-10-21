@@ -144,3 +144,9 @@ export const responsesQuerySchema = z.object({
 });
 
 export type ResponsesQueryDto = z.infer<typeof responsesQuerySchema>;
+
+export const metricsQuerySchema = z.object({
+  id: z.string().trim().nonempty("Experiment ID is required"),
+});
+
+export type MetricsQueryDto = z.infer<typeof metricsQuerySchema>;

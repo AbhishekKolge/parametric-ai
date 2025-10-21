@@ -5,9 +5,11 @@ import type {
   DeleteExperimentDto,
   ExperimentQueryDto,
   GenerateResponseDto,
+  MetricsQueryDto,
   ResponsesQueryDto,
   SingleExperimentQueryDto,
 } from "@parametric-ai/utils/experiment/schema";
+import type { ResponseMetrics } from "@parametric-ai/utils/experiment/types";
 // import { EXPECTED_OUTPUT_TOKENS_DEFAULT } from "@parametric-ai/utils/prompt/const";
 import { TRPCError } from "@trpc/server";
 import Groq from "groq-sdk";
@@ -360,5 +362,45 @@ export const getResponses = async ({
       totalCount,
     },
     message: "Responses fetched successfully",
+  };
+};
+
+export const getAllMetrics = async ({
+  ctx,
+  input,
+}: {
+  ctx: Context;
+  input: MetricsQueryDto;
+}) => {
+  const { id } = input;
+  const userId = (ctx.session as NonNullable<Context["session"]>).user.id;
+
+  await prisma.experiment.findFirstOrThrow({
+    where: { id, userId },
+  });
+
+  const responses = await prisma.response.findMany({
+    where: {
+      experimentId: id,
+    },
+    select: {
+      temperature: true,
+      topP: true,
+      maxCompletionTokens: true,
+      metrics: true,
+      createdAt: true,
+    },
+  });
+
+  const responseMetrics = responses.map(({ metrics, ...rest }) => ({
+    ...rest,
+    ...(metrics as ResponseMetrics),
+  }));
+
+  return {
+    data: {
+      metrics: responseMetrics,
+    },
+    message: "Metrics fetched successfully",
   };
 };

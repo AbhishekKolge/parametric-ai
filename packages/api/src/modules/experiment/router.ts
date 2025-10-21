@@ -3,6 +3,7 @@ import {
   deleteExperimentSchema,
   experimentQuerySchema,
   generateResponseSchema,
+  metricsQuerySchema,
   responsesQuerySchema,
   singleExperimentQuerySchema,
 } from "@parametric-ai/utils/experiment/schema";
@@ -13,6 +14,7 @@ import {
   generateResponse,
   getAll,
   getAllAIModels,
+  getAllMetrics,
   getOne,
   getResponses,
 } from "./controller";
@@ -29,4 +31,7 @@ export const experimentRouter = router({
   getResponses: protectedProcedure
     .input(responsesQuerySchema)
     .query(getResponses),
+  getAllMetrics: protectedProcedure
+    .input(metricsQuerySchema)
+    .query(getAllMetrics),
 });
