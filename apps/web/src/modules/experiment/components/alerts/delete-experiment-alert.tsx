@@ -26,7 +26,7 @@ export const DeleteExperimentAlert = ({
   name,
   id,
 }: DeleteExperimentAlertProps) => {
-  const createExperimentMutation = useDeleteExperiment({
+  const deleteExperimentMutation = useDeleteExperiment({
     onSuccess: () => {
       toggle();
     },
@@ -34,7 +34,7 @@ export const DeleteExperimentAlert = ({
 
   const deleteExperimentHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    createExperimentMutation.mutate({
+    deleteExperimentMutation.mutate({
       id,
     });
   };
@@ -53,10 +53,11 @@ export const DeleteExperimentAlert = ({
           <AlertDialogAction asChild>
             <Button
               className="text-white"
+              disabled={deleteExperimentMutation.isPending}
               onClick={deleteExperimentHandler}
               variant="destructive"
             >
-              <LoadingSwap isLoading={createExperimentMutation.isPending}>
+              <LoadingSwap isLoading={deleteExperimentMutation.isPending}>
                 Delete
               </LoadingSwap>
             </Button>

@@ -6,11 +6,16 @@ import {
   MAX_EXPERIMENT_SEARCH_TERM_LENGTH,
   MAX_EXPERIMENT_TAG_LENGTH,
   MAX_TAGS_LENGTH,
+  MAX_TEMPERATURE,
+  MAX_TOP_P,
+  MIN_COMPLETION_TOKENS,
   MIN_EXPERIMENT_LIMIT,
   MIN_EXPERIMENT_NAME_LENGTH,
   MIN_EXPERIMENT_PAGE,
   MIN_EXPERIMENT_PROMPT_LENGTH,
   MIN_EXPERIMENT_TAG_LENGTH,
+  MIN_TEMPERATURE,
+  MIN_TOP_P,
 } from "./const";
 
 export const experimentTagSchema = z
@@ -40,6 +45,7 @@ export const createExperimentSchema = z.object({
     )
     .nonempty("Name is required"),
   modelId: z.string().trim().nonempty("Model is required"),
+  modelMetadata: z.record(z.string(), z.any()),
   prompt: z
     .string()
     .trim()
@@ -88,3 +94,28 @@ export const deleteExperimentSchema = z.object({
 });
 
 export type DeleteExperimentDto = z.infer<typeof deleteExperimentSchema>;
+
+export const generateResponseSchema = z.object({
+  maxCompletionTokens: z
+    .int()
+    .min(MIN_COMPLETION_TOKENS, `At least ${MIN_COMPLETION_TOKENS} token`),
+  topP: z
+    .number()
+    .min(MIN_TOP_P, `At least ${MIN_TOP_P}`)
+    .max(MAX_TOP_P, `At most ${MAX_TOP_P}`),
+  temperature: z
+    .number()
+    .min(MIN_TEMPERATURE, `At least ${MIN_TEMPERATURE}`)
+    .max(MAX_TEMPERATURE, `At most ${MAX_TEMPERATURE}`),
+  experimentId: z.string().trim().nonempty("Experiment ID is required"),
+});
+
+export type GenerateResponseDto = z.infer<typeof generateResponseSchema>;
+
+export const singleExperimentQuerySchema = z.object({
+  id: z.string().trim().nonempty("Experiment ID is required"),
+});
+
+export type SingleExperimentQueryDto = z.infer<
+  typeof singleExperimentQuerySchema
+>;

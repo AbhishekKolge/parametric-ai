@@ -1,0 +1,3 @@
+export const DEFAULT_TEMPERATURE_STEP = 0.01;
+export const DEFAULT_TOP_P_STEP = 0.01;
+export const DEFAULT_MAX_COMPLETION_TOKENS_STEP = 128;

@@ -1,37 +1,34 @@
 model Experiment {
-    id        String     @id @default(uuid()) @map("_id")
-    name      String
-    modelId   String
-    prompt    String
-    tags      String[]
-    userId    String
-    user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-    createdAt DateTime   @default(now())
-    updatedAt DateTime   @updatedAt
-    responses Response[]
+    id            String     @id @default(uuid()) @map("_id")
+    name          String
+    modelId       String
+    modelMetadata Json
+    prompt        String
+    tags          String[]
+    userId        String
+    user          User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+    createdAt     DateTime   @default(now())
+    updatedAt     DateTime   @updatedAt
+    responses     Response[]
 
-    @@unique([userId, prompt])
+    @@unique([userId, modelId, prompt])
     @@unique([userId, name])
-    @@index([name])
     @@index([createdAt(sort: Desc)])
     @@index([modelId])
     @@index([userId])
-    @@index([tags])
     @@map("experiment")
 }
 
 model Response {
-    id               String     @id @default(uuid()) @map("_id")
-    experimentId     String
-    experiment       Experiment @relation(fields: [experimentId], references: [id], onDelete: Cascade)
-    temperature      Float
-    topP             Float
-    maxTokens        Int?
-    frequencyPenalty Float?     @default(0)
-    presencePenalty  Float?     @default(0)
-    content          String
-    metrics          Json
-    createdAt        DateTime   @default(now())
+    id                  String     @id @default(uuid()) @map("_id")
+    experimentId        String
+    experiment          Experiment @relation(fields: [experimentId], references: [id], onDelete: Cascade)
+    temperature         Float
+    topP                Float
+    maxCompletionTokens BigInt
+    content             String
+    metrics             Json
+    createdAt           DateTime   @default(now())
 
     @@index([experimentId, createdAt(sort: Desc)])
     @@map("response")

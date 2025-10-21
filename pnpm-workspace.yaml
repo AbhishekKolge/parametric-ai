@@ -38,6 +38,9 @@ catalog:
   typescript: ^5.8.2
   zod: ^4.1.11
   zustand: ^5.0.8
+  natural: "^8.1.0"
+  sentiment: "^5.0.2"
+  "@types/sentiment": "^5.0.4"
 
 onlyBuiltDependencies:
   - "@prisma/client"

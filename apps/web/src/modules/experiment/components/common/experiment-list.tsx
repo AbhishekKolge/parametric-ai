@@ -96,7 +96,7 @@ export const ExperimentList = () => {
             <Plus /> New Experiment
           </Button>
         </div>
-        {renderMultiQuery([experimentsQuery, aiModelsQuery], {
+        {renderMultiQuery([experimentsQuery], {
           isEmpty: ([data]) => !data.data.experiments.length,
           EmptyStateView: (
             <EmptyBlock
@@ -108,7 +108,7 @@ export const ExperimentList = () => {
           ErrorStateView: (error) => (
             <ErrorBlock
               className="h-full"
-              handleRetry={firstErrorRefetch([experimentsQuery, aiModelsQuery])}
+              handleRetry={firstErrorRefetch([experimentsQuery])}
               message={error.message}
             />
           ),
@@ -132,21 +132,12 @@ export const ExperimentList = () => {
               />
             </>
           ),
-          SuccessStateView: ([experimentsData, aiModelsData]) => (
+          SuccessStateView: ([experimentsData]) => (
             <>
               <div className="grid grid-cols-3 gap-4">
-                {experimentsData.data.experiments.map((experiment) => {
-                  const model = aiModelsData.data.models.find(
-                    (aiModel) => aiModel.id === experiment.modelId
-                  ) as NonNullable<(typeof aiModelsData.data.models)[number]>;
-                  return (
-                    <ExperimentCard
-                      key={experiment.id}
-                      {...experiment}
-                      model={model}
-                    />
-                  );
-                })}
+                {experimentsData.data.experiments.map((experiment) => (
+                  <ExperimentCard key={experiment.id} {...experiment} />
+                ))}
               </div>
               <Pagination
                 currentPage={experimentsData.data.currentPage}

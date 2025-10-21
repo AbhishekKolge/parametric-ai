@@ -18,6 +18,18 @@
       "types": "./dist/experiment/const.d.ts",
       "default": "./src/experiment/const.ts"
     },
+    "./experiment/helpers": {
+      "types": "./dist/experiment/helpers.d.ts",
+      "default": "./src/experiment/helpers.ts"
+    },
+    "./experiment/regex": {
+      "types": "./dist/experiment/regex.d.ts",
+      "default": "./src/experiment/regex.ts"
+    },
+    "./experiment/types": {
+      "types": "./dist/experiment/types.d.ts",
+      "default": "./src/experiment/types.ts"
+    },
     "./prompt/const": {
       "types": "./dist/prompt/const.d.ts",
       "default": "./src/prompt/const.ts"
@@ -40,13 +52,16 @@
   },
   "devDependencies": {
     "tsdown": "catalog:",
-    "@types/nodemailer": "^7.0.2"
+    "@types/nodemailer": "^7.0.2",
+    "@types/sentiment": "catalog:"
   },
   "peerDependencies": {
     "typescript": "^5"
   },
   "dependencies": {
     "nodemailer": "^7.0.9",
-    "zod": "catalog:"
+    "zod": "catalog:",
+    "natural": "catalog:",
+    "sentiment": "catalog:"
   }
 }

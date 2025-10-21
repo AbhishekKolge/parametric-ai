@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { AppRouter } from "@parametric-ai/api/router";
 import { Button } from "@parametric-ai/ui/components/button";
 import {
   Field,
@@ -36,6 +37,7 @@ import {
   validatePrompt,
 } from "@parametric-ai/utils/prompt/helper";
 import { useQuery } from "@tanstack/react-query";
+import type { inferProcedureOutput } from "@trpc/server";
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
@@ -71,6 +73,7 @@ export const CreateExperimentForm = ({ toggle }: CreateExperimentFormProps) => {
       modelId: "",
       prompt: "",
       tags: [],
+      modelMetadata: {},
     },
   });
 
@@ -92,19 +95,24 @@ export const CreateExperimentForm = ({ toggle }: CreateExperimentFormProps) => {
     createExperimentMutation.mutate(formattedData);
   };
 
-  const selectedModelId = form.watch("modelId");
+  const modelChangeHandler = (modelId: string) => {
+    const modelMetadata = aiModelsQuery.data?.data.models.find(
+      (model) => model.id === modelId
+    ) as inferProcedureOutput<
+      AppRouter["experiment"]["getAllAIModels"]
+    >["data"]["models"][number];
+
+    form.setValue("modelId", modelId);
+    form.setValue("modelMetadata", modelMetadata);
+  };
+
+  const selectedModel = form.watch("modelMetadata") as inferProcedureOutput<
+    AppRouter["experiment"]["getAllAIModels"]
+  >["data"]["models"][number];
   const promptValue = form.watch("prompt");
-  const selectedModel = useMemo(() => {
-    if (!aiModelsQuery.data?.data.models) {
-      return null;
-    }
-    return aiModelsQuery.data.data.models.find(
-      (model) => model.id === selectedModelId
-    );
-  }, [aiModelsQuery.data, selectedModelId]);
 
   const tokenEstimation = useMemo(() => {
-    if (!selectedModel) {
+    if (!selectedModel.id) {
       return null;
     }
     return validatePrompt({
@@ -153,7 +161,7 @@ export const CreateExperimentForm = ({ toggle }: CreateExperimentFormProps) => {
                 </FieldContent>
                 <Select
                   name={field.name}
-                  onValueChange={field.onChange}
+                  onValueChange={modelChangeHandler}
                   value={field.value}
                 >
                   <SelectTrigger aria-invalid={fieldState.invalid} id="modelId">
@@ -322,7 +330,11 @@ export const CreateExperimentForm = ({ toggle }: CreateExperimentFormProps) => {
         <Button onClick={toggle} variant="outline">
           Cancel
         </Button>
-        <Button form="create-experiment-form" type="submit">
+        <Button
+          disabled={createExperimentMutation.isPending}
+          form="create-experiment-form"
+          type="submit"
+        >
           <LoadingSwap isLoading={createExperimentMutation.isPending}>
             Create
           </LoadingSwap>

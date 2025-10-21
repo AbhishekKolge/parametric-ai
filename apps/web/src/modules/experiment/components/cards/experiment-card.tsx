@@ -33,14 +33,12 @@ export type AiModelOutput = inferProcedureOutput<
 >;
 
 export type ExperimentCardProps =
-  ExperimentsOutput["data"]["experiments"][number] & {
-    model: AiModelOutput["data"]["models"][number];
-  };
+  ExperimentsOutput["data"]["experiments"][number];
 
 export const ExperimentCard = ({
   name,
   prompt,
-  model,
+  modelMetadata,
   createdAt,
   _count,
   updatedAt,
@@ -48,6 +46,7 @@ export const ExperimentCard = ({
   id,
 }: ExperimentCardProps) => {
   const deleteExperimentDisclosure = useDisclosure({});
+  const model = modelMetadata as AiModelOutput["data"]["models"][number];
 
   return (
     <>

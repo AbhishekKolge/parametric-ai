@@ -1,15 +1,18 @@
 import prisma, { type Prisma } from "@parametric-ai/db";
+import { computeQualityMetrics } from "@parametric-ai/utils/experiment/helpers";
 import type {
   CreateExperimentDto,
   DeleteExperimentDto,
   ExperimentQueryDto,
+  GenerateResponseDto,
+  SingleExperimentQueryDto,
 } from "@parametric-ai/utils/experiment/schema";
 // import { EXPECTED_OUTPUT_TOKENS_DEFAULT } from "@parametric-ai/utils/prompt/const";
 import { TRPCError } from "@trpc/server";
-// import Groq from "groq-sdk";
+import Groq from "groq-sdk";
 import type { Context } from "../../context";
 
-// const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 export const getAllAIModels = () => {
   // const res = await groq.models.list();
@@ -229,5 +232,86 @@ export const deleteOne = async ({
 
   return {
     message: "Experiment deleted successfully",
+  };
+};
+
+export const generateResponse = async ({
+  ctx,
+  input,
+}: {
+  ctx: Context;
+  input: GenerateResponseDto;
+}) => {
+  const { maxCompletionTokens, topP, temperature, experimentId } = input;
+  const userId = (ctx.session as NonNullable<Context["session"]>).user.id;
+
+  const experiment = await prisma.experiment.findFirstOrThrow({
+    where: { id: experimentId, userId },
+  });
+
+  const { usage, choices } = await groq.chat.completions.create({
+    messages: [
+      {
+        role: "user",
+        content: experiment.prompt,
+      },
+    ],
+    model: "meta-llama/llama-4-scout-17b-16e-instruct",
+    max_completion_tokens: maxCompletionTokens,
+    top_p: topP,
+    temperature,
+  });
+
+  const metrics = {
+    ...(usage
+      ? {
+          completionTokens: usage.completion_tokens,
+          promptTime: usage.prompt_time,
+          completionTime: usage.completion_time,
+          totalTokens: usage.total_tokens,
+          totalTime: usage.total_time,
+        }
+      : {}),
+    ...computeQualityMetrics(
+      experiment.prompt,
+      choices[0]?.message.content || ""
+    ),
+  };
+
+  await prisma.response.create({
+    data: {
+      experimentId,
+      temperature,
+      topP,
+      maxCompletionTokens,
+      content: choices[0]?.message.content || "",
+      metrics,
+    },
+  });
+
+  return {
+    message: "Response generated successfully",
+  };
+};
+
+export const getOne = async ({
+  ctx,
+  input,
+}: {
+  ctx: Context;
+  input: SingleExperimentQueryDto;
+}) => {
+  const { id } = input;
+  const userId = (ctx.session as NonNullable<Context["session"]>).user.id;
+
+  const experiment = await prisma.experiment.findFirstOrThrow({
+    where: { id, userId },
+  });
+
+  return {
+    data: {
+      experiment,
+    },
+    message: "Experiment fetched successfully",
   };
 };
