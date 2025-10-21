@@ -35,7 +35,7 @@ export const ForgotPasswordForm = () => {
   const form = useForm<ForgotPasswordFormDto>({
     resolver: zodResolver(forgotPasswordFormSchema),
     defaultValues: {
-      email: "hesayij166@nrlord.com",
+      email: "",
     },
   });
 
