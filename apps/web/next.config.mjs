@@ -10,7 +10,7 @@ const nextConfig = {
       },
     ];
   },
-  transpilePackages: ["shiki", "@parametric-ai/ui"],
+  transpilePackages: ["@parametric-ai/ui"],
 };
 
 export default nextConfig;

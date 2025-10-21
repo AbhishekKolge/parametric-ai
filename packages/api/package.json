@@ -22,12 +22,8 @@
   },
   "dependencies": {
     "@trpc/server": "catalog:",
-    "@trpc/client": "catalog:",
     "@prisma/client": "catalog:",
-    "ai": "catalog:",
-    "@ai-sdk/groq": "catalog:",
     "groq-sdk": "catalog:",
-    "dotenv": "catalog:",
     "zod": "catalog:",
     "better-auth": "catalog:",
     "http-status-codes": "catalog:",

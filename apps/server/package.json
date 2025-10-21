@@ -14,15 +14,12 @@
     "@parametric-ai/auth": "workspace:*",
     "@parametric-ai/db": "workspace:*",
     "@trpc/server": "catalog:",
-    "ai": "catalog:",
     "better-auth": "catalog:",
     "cors": "^2.8.5",
     "dotenv": "catalog:",
     "express": "^5.1.0",
-    "express-async-error": "^0.0.2",
     "helmet": "^8.1.0",
-    "http-status-codes": "catalog:",
-    "zod": "catalog:"
+    "http-status-codes": "catalog:"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

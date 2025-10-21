@@ -3,7 +3,6 @@ packages:
   - packages/*
 
 catalog:
-  "@ai-sdk/groq": ^2.0.8
   "@hookform/resolvers": ^5.2.2
   "@prisma/client": ^6.15.0
   "@radix-ui/react-label": 2.1.7
@@ -17,7 +16,6 @@ catalog:
   "@types/react": ~19.2.2
   "@types/react-dom": ^19
   "@types/sentiment": ^5.0.4
-  ai: ^5.0.49
   better-auth: ^1.3.13
   class-variance-authority: 0.7.1
   clsx: ^2.1.1
