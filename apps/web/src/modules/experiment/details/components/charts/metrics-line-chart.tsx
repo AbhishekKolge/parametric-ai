@@ -18,7 +18,7 @@ import {
 import type { inferProcedureOutput } from "@trpc/server";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
 import { MAX_VISIBLE_METRIC_BARS } from "../../utils/const";
 import { formatNumber } from "../../utils/helper";
 
@@ -26,11 +26,11 @@ export type metricsOutput = inferProcedureOutput<
   AppRouter["experiment"]["getAllMetrics"]
 >;
 
-export type CustomChartProps = {
+export type MetricsLineChartProps = {
   metrics: metricsOutput["data"]["metrics"][number][];
 };
 
-export const MetricsStackedBarChart = ({ metrics }: CustomChartProps) => {
+export const MetricsLineChart = ({ metrics }: MetricsLineChartProps) => {
   const [startIndex, setStartIndex] = useState(0);
 
   const chartData = metrics.map((r, idx) => ({
@@ -100,7 +100,14 @@ export const MetricsStackedBarChart = ({ metrics }: CustomChartProps) => {
       </CardHeader>
       <CardContent>
         <ChartContainer className="h-80 w-full" config={chartConfig}>
-          <BarChart accessibilityLayer data={visibleData}>
+          <LineChart
+            accessibilityLayer
+            data={visibleData}
+            margin={{
+              left: 12,
+              right: 12,
+            }}
+          >
             <CartesianGrid />
             <XAxis
               axisLine={false}
@@ -110,42 +117,56 @@ export const MetricsStackedBarChart = ({ metrics }: CustomChartProps) => {
             />
             <ChartTooltip content={<ChartTooltipContent />} cursor={false} />
             <ChartLegend content={<ChartLegendContent />} />
-            <Bar
+            <Line
               dataKey="coherence"
-              fill={chartConfig.coherence.color}
-              stackId="a"
+              dot={false}
+              stroke={chartConfig.coherence.color}
+              strokeWidth={2}
+              type="monotone"
             />
-            <Bar
+            <Line
               dataKey="relevance"
-              fill={chartConfig.relevance.color}
-              stackId="a"
+              dot={false}
+              stroke={chartConfig.relevance.color}
+              strokeWidth={2}
+              type="monotone"
             />
-            <Bar
+            <Line
               dataKey="creativity"
-              fill={chartConfig.creativity.color}
-              stackId="a"
+              dot={false}
+              stroke={chartConfig.creativity.color}
+              strokeWidth={2}
+              type="monotone"
             />
-            <Bar
+            <Line
               dataKey="completeness"
-              fill={chartConfig.completeness.color}
-              stackId="a"
+              dot={false}
+              stroke={chartConfig.completeness.color}
+              strokeWidth={2}
+              type="monotone"
             />
-            <Bar
+            <Line
               dataKey="readability"
-              fill={chartConfig.readability.color}
-              stackId="a"
+              dot={false}
+              stroke={chartConfig.readability.color}
+              strokeWidth={2}
+              type="monotone"
             />
-            <Bar
+            <Line
               dataKey="sentimentBalance"
-              fill={chartConfig.sentimentBalance.color}
-              stackId="a"
+              dot={false}
+              stroke={chartConfig.sentimentBalance.color}
+              strokeWidth={2}
+              type="monotone"
             />
-            <Bar
+            <Line
               dataKey="informationDensity"
-              fill={chartConfig.informationDensity.color}
-              stackId="a"
+              dot={false}
+              stroke={chartConfig.informationDensity.color}
+              strokeWidth={2}
+              type="monotone"
             />
-          </BarChart>
+          </LineChart>
         </ChartContainer>
       </CardContent>
     </Card>

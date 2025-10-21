@@ -10,6 +10,8 @@ import {
 import {
   type ChartConfig,
   ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "@parametric-ai/ui/components/chart";
@@ -24,11 +26,11 @@ export type metricsOutput = inferProcedureOutput<
   AppRouter["experiment"]["getAllMetrics"]
 >;
 
-export type CustomChartProps = {
+export type MetricsBarChartProps = {
   metrics: metricsOutput["data"]["metrics"][number][];
 };
 
-export const MetricsBarChart = ({ metrics }: CustomChartProps) => {
+export const MetricsBarChart = ({ metrics }: MetricsBarChartProps) => {
   const [startIndex, setStartIndex] = useState(0);
 
   const chartData = metrics.map((r, index) => ({
@@ -111,6 +113,7 @@ export const MetricsBarChart = ({ metrics }: CustomChartProps) => {
               content={<ChartTooltipContent indicator="dashed" />}
               cursor={false}
             />
+            <ChartLegend content={<ChartLegendContent />} />
             <Bar dataKey="coherence" fill="var(--chart-1)" radius={4} />
             <Bar dataKey="relevance" fill="var(--chart-2)" radius={4} />
             <Bar dataKey="creativity" fill="var(--chart-3)" radius={4} />
