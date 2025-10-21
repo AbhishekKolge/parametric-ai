@@ -5,6 +5,7 @@ import type {
   DeleteExperimentDto,
   ExperimentQueryDto,
   GenerateResponseDto,
+  ResponsesQueryDto,
   SingleExperimentQueryDto,
 } from "@parametric-ai/utils/experiment/schema";
 // import { EXPECTED_OUTPUT_TOKENS_DEFAULT } from "@parametric-ai/utils/prompt/const";
@@ -313,5 +314,48 @@ export const getOne = async ({
       experiment,
     },
     message: "Experiment fetched successfully",
+  };
+};
+
+export const getResponses = async ({
+  ctx,
+  input,
+}: {
+  ctx: Context;
+  input: ResponsesQueryDto;
+}) => {
+  const { experimentId, page, limit, sortBy, order } = input;
+  const userId = (ctx.session as NonNullable<Context["session"]>).user.id;
+
+  await prisma.experiment.findFirstOrThrow({
+    where: { id: experimentId, userId },
+  });
+
+  const [totalCount, responses] = await prisma.$transaction([
+    prisma.response.count({
+      where: {
+        experimentId,
+      },
+    }),
+    prisma.response.findMany({
+      where: {
+        experimentId,
+      },
+      skip: (page - 1) * limit,
+      take: limit,
+      orderBy: { [sortBy]: order },
+    }),
+  ]);
+
+  const totalPages = Math.ceil(totalCount / limit);
+
+  return {
+    data: {
+      responses,
+      totalPages,
+      currentPage: page,
+      totalCount,
+    },
+    message: "Responses fetched successfully",
   };
 };

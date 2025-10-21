@@ -1,3 +1,4 @@
+import { ResponseCard } from "../components/cards/response-card";
 import { ParametersForm } from "../components/forms/parameters-form";
 
 export const ExperimentDetails = () => (
@@ -8,8 +9,9 @@ export const ExperimentDetails = () => (
         Compare outputs across different parameter configurations
       </p>
     </div>
-    <div>
+    <div className="flex items-start items-center gap-8">
       <ParametersForm />
+      <ResponseCard />
     </div>
   </section>
 );

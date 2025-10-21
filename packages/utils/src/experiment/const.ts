@@ -7,8 +7,8 @@ export const MIN_EXPERIMENT_TAG_LENGTH = 1;
 export const MAX_EXPERIMENT_TAG_LENGTH = 10;
 export const MAX_TAGS_LENGTH = 5;
 export const MIN_EXPERIMENT_LIMIT = 1;
-export const MAX_EXPERIMENT_QUERY_LIMIT = 50;
-export const DEFAULT_EXPERIMENT_QUERY_LIMIT = 20;
+export const MAX_EXPERIMENT_LIMIT = 50;
+export const DEFAULT_EXPERIMENT_LIMIT = 20;
 export const MAX_EXPERIMENT_SEARCH_TERM_LENGTH = 500;
 export const MIN_EXPERIMENT_PAGE = 1;
 export const DEFAULT_EXPERIMENT_PAGE = 1;
@@ -20,6 +20,10 @@ export const MAX_TEMPERATURE = 2.0;
 export const DEFAULT_TEMPERATURE = 0.6;
 export const MIN_COMPLETION_TOKENS = 1024;
 export const DEFAULT_COMPLETION_TOKENS = EXPECTED_OUTPUT_TOKENS_DEFAULT;
+export const MIN_RESPONSE_PAGE = 1;
+export const MIN_RESPONSE_LIMIT = 1;
+export const MAX_RESPONSE_LIMIT = 50;
+export const DEFAULT_RESPONSE_LIMIT = 20;
 export const STOP_WORDS = new Set([
   "the",
   "a",

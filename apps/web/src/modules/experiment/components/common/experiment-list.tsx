@@ -12,8 +12,8 @@ import {
   SelectValue,
 } from "@parametric-ai/ui/components/select";
 import {
+  DEFAULT_EXPERIMENT_LIMIT,
   DEFAULT_EXPERIMENT_PAGE,
-  DEFAULT_EXPERIMENT_QUERY_LIMIT,
 } from "@parametric-ai/utils/experiment/const";
 import { useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
@@ -115,17 +115,15 @@ export const ExperimentList = () => {
           LoadingStateView: (
             <>
               <div className="grid grid-cols-3 gap-4">
-                {Array.from({ length: DEFAULT_EXPERIMENT_QUERY_LIMIT }).map(
-                  () => (
-                    <ExperimentCardLoading key={crypto.randomUUID()} />
-                  )
-                )}
+                {Array.from({ length: DEFAULT_EXPERIMENT_LIMIT }).map(() => (
+                  <ExperimentCardLoading key={crypto.randomUUID()} />
+                ))}
               </div>
               <Pagination
                 currentPage={DEFAULT_EXPERIMENT_PAGE}
                 isLoading
                 label="experiments"
-                limit={DEFAULT_EXPERIMENT_QUERY_LIMIT}
+                limit={DEFAULT_EXPERIMENT_LIMIT}
                 onPageChange={setPage}
                 totalCount={0}
                 totalPages={0}
