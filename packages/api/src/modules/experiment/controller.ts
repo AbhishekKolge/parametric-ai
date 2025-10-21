@@ -291,6 +291,9 @@ export const generateResponse = async ({
   });
 
   return {
+    data: {
+      experimentId,
+    },
     message: "Response generated successfully",
   };
 };

@@ -9,11 +9,10 @@ export type QualityMetrics = {
   overallScore: number;
 };
 
-export type ResponseMetrics = {
+export type ResponseMetrics = QualityMetrics & {
   completionTokens: number;
   promptTime: number;
   completionTime: number;
   totalTokens: number;
   totalTime: number;
-  quality: QualityMetrics;
 };

@@ -39,7 +39,6 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import type { inferProcedureOutput } from "@trpc/server";
 import { X } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import type { useDisclosure } from "@/hooks/use-disclosure";
@@ -57,13 +56,11 @@ type CreateExperimentFormProps = Pick<
 >;
 
 export const CreateExperimentForm = ({ toggle }: CreateExperimentFormProps) => {
-  const router = useRouter();
   const aiModelsQuery = useQuery(trpc.experiment.getAllAIModels.queryOptions());
   const createExperimentMutation = useCreateExperiment({
-    onSuccess: ({ data }) => {
+    onSuccess: () => {
       toggle();
       form.reset();
-      router.push(`/experiment/${data.id}`);
     },
   });
   const form = useForm<ExtendedCreateExperimentDto>({

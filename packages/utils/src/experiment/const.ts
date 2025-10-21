@@ -21,9 +21,10 @@ export const DEFAULT_TEMPERATURE = 0.6;
 export const MIN_COMPLETION_TOKENS = 1024;
 export const DEFAULT_COMPLETION_TOKENS = EXPECTED_OUTPUT_TOKENS_DEFAULT;
 export const MIN_RESPONSE_PAGE = 1;
+export const DEFAULT_RESPONSE_PAGE = 1;
 export const MIN_RESPONSE_LIMIT = 1;
 export const MAX_RESPONSE_LIMIT = 50;
-export const DEFAULT_RESPONSE_LIMIT = 20;
+export const DEFAULT_RESPONSE_LIMIT = 5;
 export const STOP_WORDS = new Set([
   "the",
   "a",

@@ -1,7 +1,9 @@
 import z from "zod";
 import {
   DEFAULT_EXPERIMENT_LIMIT,
+  DEFAULT_EXPERIMENT_PAGE,
   DEFAULT_RESPONSE_LIMIT,
+  DEFAULT_RESPONSE_PAGE,
   MAX_EXPERIMENT_LIMIT,
   MAX_EXPERIMENT_NAME_LENGTH,
   MAX_EXPERIMENT_SEARCH_TERM_LENGTH,
@@ -70,7 +72,7 @@ export const experimentQuerySchema = z.object({
   page: z
     .int()
     .min(MIN_EXPERIMENT_PAGE, `At least page ${MIN_EXPERIMENT_PAGE}`)
-    .default(MIN_EXPERIMENT_PAGE),
+    .default(DEFAULT_EXPERIMENT_PAGE),
   limit: z
     .int()
     .min(MIN_EXPERIMENT_LIMIT, `At least ${MIN_EXPERIMENT_LIMIT} result`)
@@ -129,7 +131,7 @@ export const responsesQuerySchema = z.object({
   page: z
     .int()
     .min(MIN_RESPONSE_PAGE, `At least page ${MIN_RESPONSE_PAGE}`)
-    .default(MIN_RESPONSE_PAGE),
+    .default(DEFAULT_RESPONSE_PAGE),
   limit: z
     .int()
     .min(MIN_RESPONSE_LIMIT, `At least ${MIN_RESPONSE_LIMIT} result`)

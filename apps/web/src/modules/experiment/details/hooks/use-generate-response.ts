@@ -16,7 +16,12 @@ export const useGenerateResponse = (
         });
         queryClient.invalidateQueries({
           queryKey: trpc.experiment.getOne.queryKey({
-            // id: args[0],
+            id: args[0].data.experimentId,
+          }),
+        });
+        queryClient.invalidateQueries({
+          queryKey: trpc.experiment.getResponses.queryKey({
+            experimentId: args[0].data.experimentId,
           }),
         });
         opts?.onSuccess?.(...args);

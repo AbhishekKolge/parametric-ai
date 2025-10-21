@@ -232,8 +232,10 @@ export const ParametersForm = () => {
                       {...field}
                       defaultValue={[DEFAULT_COMPLETION_TOKENS]}
                       max={
-                        tokenEstimation?.remainingTokens ||
-                        selectedModel.max_completion_tokens
+                        tokenEstimation?.estimatedTokens
+                          ? selectedModel.max_completion_tokens -
+                            tokenEstimation.estimatedTokens
+                          : selectedModel.max_completion_tokens
                       }
                       min={MIN_COMPLETION_TOKENS}
                       onChange={() => null}

@@ -1,17 +1,17 @@
-import { ResponseCard } from "../components/cards/response-card";
+import { Responses } from "../components/common/responses";
 import { ParametersForm } from "../components/forms/parameters-form";
 
 export const ExperimentDetails = () => (
-  <section className="flex h-full flex-col gap-8">
-    <div className="flex flex-col gap-2">
-      <h1 className="font-medium text-3xl">Generated Responses</h1>
-      <p className="font-light">
-        Compare outputs across different parameter configurations
-      </p>
-    </div>
-    <div className="flex items-start items-center gap-8">
+  <section className="flex h-full items-start gap-8">
+    <aside className="sticky top-[88px] flex w-full flex-col gap-8 sm:max-w-md">
+      <div className="flex flex-col gap-2">
+        <h1 className="font-medium text-3xl">Generated Responses</h1>
+        <p className="font-light">
+          Compare outputs across different parameter configurations
+        </p>
+      </div>
       <ParametersForm />
-      <ResponseCard />
-    </div>
+    </aside>
+    <Responses />
   </section>
 );
