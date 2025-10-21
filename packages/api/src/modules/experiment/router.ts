@@ -2,6 +2,7 @@ import {
   createExperimentSchema,
   deleteExperimentSchema,
   experimentQuerySchema,
+  exportExperimentToExcelSchema,
   generateResponseSchema,
   metricsQuerySchema,
   responsesQuerySchema,
@@ -11,6 +12,7 @@ import { protectedProcedure, router } from "../../index";
 import {
   create,
   deleteOne,
+  exportExperimentToExcel,
   generateResponse,
   getAll,
   getAllAIModels,
@@ -34,4 +36,7 @@ export const experimentRouter = router({
   getAllMetrics: protectedProcedure
     .input(metricsQuerySchema)
     .query(getAllMetrics),
+  exportExperimentToExcel: protectedProcedure
+    .input(exportExperimentToExcelSchema)
+    .mutation(exportExperimentToExcel),
 });

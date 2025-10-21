@@ -150,3 +150,11 @@ export const metricsQuerySchema = z.object({
 });
 
 export type MetricsQueryDto = z.infer<typeof metricsQuerySchema>;
+
+export const exportExperimentToExcelSchema = z.object({
+  id: z.string().trim().nonempty("Experiment ID is required"),
+});
+
+export type ExportExperimentToExcelDto = z.infer<
+  typeof exportExperimentToExcelSchema
+>;

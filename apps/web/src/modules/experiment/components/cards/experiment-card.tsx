@@ -22,6 +22,7 @@ import { formatDistanceToNow } from "date-fns";
 import { Download, Trash2, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import { useDisclosure } from "@/hooks/use-disclosure";
+import { useExportExperimentToExcel } from "../../hooks/use-export-experiment-to-excel";
 import { DeleteExperimentAlert } from "../alerts/delete-experiment-alert";
 
 export type ExperimentsOutput = inferProcedureOutput<
@@ -47,6 +48,11 @@ export const ExperimentCard = ({
 }: ExperimentCardProps) => {
   const deleteExperimentDisclosure = useDisclosure({});
   const model = modelMetadata as AiModelOutput["data"]["models"][number];
+  const exportExperimentToExcelMutation = useExportExperimentToExcel();
+
+  const handleDownload = () => {
+    exportExperimentToExcelMutation.mutate({ id });
+  };
 
   return (
     <>
@@ -96,12 +102,16 @@ export const ExperimentCard = ({
           <Button asChild className="flex-1" variant="outline">
             <Link href={`/experiment/${id}`}>
               <TrendingUp />
-              Start Experiment
+              {_count.responses ? "Continue" : "Start"} Experiment
             </Link>
           </Button>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="outline">
+              <Button
+                disabled={exportExperimentToExcelMutation.isPending}
+                onClick={handleDownload}
+                variant="outline"
+              >
                 <Download />
               </Button>
             </TooltipTrigger>

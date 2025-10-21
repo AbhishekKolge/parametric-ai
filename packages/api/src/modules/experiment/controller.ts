@@ -4,6 +4,7 @@ import type {
   CreateExperimentDto,
   DeleteExperimentDto,
   ExperimentQueryDto,
+  ExportExperimentToExcelDto,
   GenerateResponseDto,
   MetricsQueryDto,
   ResponsesQueryDto,
@@ -11,9 +12,11 @@ import type {
 } from "@parametric-ai/utils/experiment/schema";
 import type { ResponseMetrics } from "@parametric-ai/utils/experiment/types";
 // import { EXPECTED_OUTPUT_TOKENS_DEFAULT } from "@parametric-ai/utils/prompt/const";
-import { TRPCError } from "@trpc/server";
+import { type inferProcedureOutput, TRPCError } from "@trpc/server";
 import Groq from "groq-sdk";
+import { utils, write } from "xlsx";
 import type { Context } from "../../context";
+import type { AppRouter } from "../../router";
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
@@ -402,5 +405,90 @@ export const getAllMetrics = async ({
       metrics: responseMetrics,
     },
     message: "Metrics fetched successfully",
+  };
+};
+
+export const exportExperimentToExcel = async ({
+  ctx,
+  input,
+}: {
+  ctx: Context;
+  input: ExportExperimentToExcelDto;
+}) => {
+  const { id } = input;
+  const userId = (ctx.session as NonNullable<Context["session"]>).user.id;
+
+  const experiment = await prisma.experiment.findFirstOrThrow({
+    where: { id, userId },
+    include: {
+      responses: true,
+    },
+  });
+
+  const experimentRow = {
+    ExperimentID: experiment.id,
+    ExperimentName: experiment.name,
+    ModelID: experiment.modelId,
+    Prompt: experiment.prompt,
+    Tags: experiment.tags.join(", "),
+    CreatedAt: experiment.createdAt.toISOString(),
+    UpdatedAt: experiment.updatedAt.toISOString(),
+  };
+
+  const modelMetadata = experiment.modelMetadata as inferProcedureOutput<
+    AppRouter["experiment"]["getAllAIModels"]
+  >["data"]["models"][number];
+
+  const modelRow = {
+    ModelID: modelMetadata.id,
+    OwnedBy: modelMetadata.owned_by,
+    Active: modelMetadata.active.toString(),
+    ContextWindow: modelMetadata.context_window.toString(),
+    MaxCompletionTokens: modelMetadata.max_completion_tokens.toString(),
+  };
+
+  const responseRow = experiment.responses.map((response, index) => {
+    const metrics = response.metrics as ResponseMetrics;
+    return {
+      ResponseNumber: index + 1,
+      ResponseID: response.id,
+      Temperature: response.temperature,
+      TopP: response.topP,
+      MaxCompletionTokens: response.maxCompletionTokens.toString(),
+      Content: response.content,
+      CreatedAt: response.createdAt.toISOString(),
+      Coherence: metrics.coherence,
+      Relevance: metrics.relevance,
+      Creativity: metrics.creativity,
+      Completeness: metrics.completeness,
+      Readability: metrics.readability,
+      SentimentBalance: metrics.sentimentBalance,
+      InformationDensity: metrics.informationDensity,
+      OverallScore: metrics.overallScore,
+      CompletionTokens: metrics.completionTokens,
+      PromptTime: metrics.promptTime,
+      CompletionTime: metrics.completionTime,
+      TotalTokens: metrics.totalTokens,
+      TotalTime: metrics.totalTime,
+    };
+  });
+
+  const workbook = utils.book_new();
+  const experimentSheet = utils.json_to_sheet([experimentRow]);
+  const modelSheet = utils.json_to_sheet([modelRow]);
+  const responsesSheet = utils.json_to_sheet(responseRow);
+
+  utils.book_append_sheet(workbook, experimentSheet, "Experiment Info");
+  utils.book_append_sheet(workbook, modelSheet, "Model Info");
+  utils.book_append_sheet(workbook, responsesSheet, "Responses");
+
+  const buffer = write(workbook, { type: "buffer", bookType: "xlsx" });
+
+  return {
+    data: {
+      base64Data: buffer.toString("base64"),
+      experimentId: experiment.id,
+    },
+    message: "Experiment exported to Excel successfully",
   };
 };
