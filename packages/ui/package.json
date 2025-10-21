@@ -27,6 +27,7 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "react-paginate": "^8.3.0",
+    "recharts": "catalog:",
     "sonner": "catalog:",
     "tailwind-merge": "catalog:",
     "tw-animate-css": "catalog:"

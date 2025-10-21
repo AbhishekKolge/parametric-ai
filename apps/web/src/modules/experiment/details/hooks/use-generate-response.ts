@@ -24,6 +24,11 @@ export const useGenerateResponse = (
             experimentId: args[0].data.experimentId,
           }),
         });
+        queryClient.invalidateQueries({
+          queryKey: trpc.experiment.getAllMetrics.queryKey({
+            id: args[0].data.experimentId,
+          }),
+        });
         opts?.onSuccess?.(...args);
       },
       onError: (...args) => {

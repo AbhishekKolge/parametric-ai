@@ -63,3 +63,5 @@ export const PERFORMANCE_METRICS_UNITS: Partial<
   completionTime: "s",
   totalTokens: "",
 };
+
+export const MAX_VISIBLE_METRIC_BARS = 5;

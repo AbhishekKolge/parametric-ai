@@ -33,7 +33,8 @@
     "zod": "catalog:",
     "superjson": "catalog:",
     "date-fns": "catalog:",
-    "zustand": "catalog:"
+    "zustand": "catalog:",
+    "recharts": "catalog:"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "catalog:",

@@ -4,6 +4,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@parametric-ai/ui/components/tabs";
+import { ResponseCharts } from "./response-charts";
 import { ResponseList } from "./response-list";
 
 export const Responses = () => (
@@ -15,6 +16,8 @@ export const Responses = () => (
     <TabsContent value="list">
       <ResponseList />
     </TabsContent>
-    <TabsContent value="charts">Charts</TabsContent>
+    <TabsContent value="charts">
+      <ResponseCharts />
+    </TabsContent>
   </Tabs>
 );

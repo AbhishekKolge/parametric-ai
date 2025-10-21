@@ -36,7 +36,7 @@ export const ResponseList = () => {
   );
 
   return (
-    <div className="flex h-full flex-col gap-8">
+    <section className="flex h-full flex-col gap-8">
       <div className="flex items-center gap-4">
         <Select onValueChange={setSortBy} value={filters.sortBy}>
           <SelectTrigger>
@@ -114,6 +114,6 @@ export const ResponseList = () => {
           </div>
         ),
       })}
-    </div>
+    </section>
   );
 };
