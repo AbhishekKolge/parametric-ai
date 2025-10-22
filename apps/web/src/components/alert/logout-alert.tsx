@@ -16,13 +16,13 @@ import { AuthActionButton } from "@/modules/auth/components/buttons/auth-action-
 
 type LogoutAlertProps = ReturnType<typeof useDisclosure>;
 
-export const LogoutAlert = ({ isOpen, toggle }: LogoutAlertProps) => {
+export const LogoutAlert = ({ isOpen, close, toggle }: LogoutAlertProps) => {
   const logoutHandler = () =>
     authClient.signOut(
       {},
       {
         onSuccess: () => {
-          toggle();
+          close();
         },
       }
     );

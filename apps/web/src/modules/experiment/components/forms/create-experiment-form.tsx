@@ -52,14 +52,14 @@ import {
 
 type CreateExperimentFormProps = Pick<
   ReturnType<typeof useDisclosure>,
-  "toggle"
+  "close"
 >;
 
-export const CreateExperimentForm = ({ toggle }: CreateExperimentFormProps) => {
+export const CreateExperimentForm = ({ close }: CreateExperimentFormProps) => {
   const aiModelsQuery = useQuery(trpc.experiment.getAllAIModels.queryOptions());
   const createExperimentMutation = useCreateExperiment({
     onSuccess: () => {
-      toggle();
+      close();
       form.reset();
     },
   });
@@ -324,7 +324,11 @@ export const CreateExperimentForm = ({ toggle }: CreateExperimentFormProps) => {
         </FieldGroup>
       </form>
       <div className="flex justify-end gap-2">
-        <Button onClick={toggle} variant="outline">
+        <Button
+          disabled={createExperimentMutation.isPending}
+          onClick={close}
+          variant="outline"
+        >
           Cancel
         </Button>
         <Button

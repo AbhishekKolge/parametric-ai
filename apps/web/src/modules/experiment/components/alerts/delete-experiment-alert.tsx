@@ -25,10 +25,11 @@ export const DeleteExperimentAlert = ({
   isOpen,
   name,
   id,
+  close,
 }: DeleteExperimentAlertProps) => {
   const deleteExperimentMutation = useDeleteExperiment({
     onSuccess: () => {
-      toggle();
+      close();
     },
   });
 
@@ -49,7 +50,9 @@ export const DeleteExperimentAlert = ({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel disabled={deleteExperimentMutation.isPending}>
+            Cancel
+          </AlertDialogCancel>
           <AlertDialogAction asChild>
             <Button
               className="text-white"

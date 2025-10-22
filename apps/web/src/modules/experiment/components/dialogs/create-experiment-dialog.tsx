@@ -13,6 +13,7 @@ type CreateExperimentDialogProps = ReturnType<typeof useDisclosure>;
 export const CreateExperimentDialog = ({
   isOpen,
   toggle,
+  close,
 }: CreateExperimentDialogProps) => (
   <Dialog onOpenChange={toggle} open={isOpen}>
     <DialogContent className="sm:max-w-3xl">
@@ -22,7 +23,7 @@ export const CreateExperimentDialog = ({
           Set up a new experiment to test different LLM parameters
         </DialogDescription>
       </DialogHeader>
-      <CreateExperimentForm toggle={toggle} />
+      <CreateExperimentForm close={close} />
     </DialogContent>
   </Dialog>
 );
