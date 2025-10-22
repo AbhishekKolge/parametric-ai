@@ -19,10 +19,27 @@ export const AuthChecker = ({ children }: { children: React.ReactNode }) => {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: dependencies are fine
   useEffect(() => {
+    console.log({
+      isLoading,
+      step: 1,
+    });
+
     if (!isLoading) {
       if (!isLoggedIn && isProtectedRoute) {
+        console.log({
+          isLoading,
+          isProtectedRoute,
+          step: 2,
+        });
+
         router.replace("/auth/login");
       } else if (isLoggedIn && isAuthRoute) {
+        console.log({
+          isLoggedIn,
+          isAuthRoute,
+          step: 3,
+        });
+
         router.replace("/experiment");
       }
     }
