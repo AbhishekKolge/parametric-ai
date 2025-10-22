@@ -22,10 +22,8 @@ export const AuthChecker = ({ children }: { children: React.ReactNode }) => {
     if (!isLoading) {
       if (!isLoggedIn && isProtectedRoute) {
         router.replace("/auth/login");
-        router.refresh();
       } else if (isLoggedIn && isAuthRoute) {
         router.replace("/experiment");
-        router.refresh();
       }
     }
   }, [isLoading, isLoggedIn, isAuthRoute, isProtectedRoute]);
