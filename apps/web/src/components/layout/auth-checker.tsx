@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { authClient } from "@/lib/auth-client";
 import { PROTECTED_ROUTES } from "@/utils/const";
 import { Loading } from "./loading";
@@ -10,7 +10,6 @@ export const AuthChecker = ({ children }: { children: React.ReactNode }) => {
   const session = authClient.useSession();
   const router = useRouter();
   const pathname = usePathname();
-  const [redirected, setRedirected] = useState(false);
   const isAuthRoute = pathname.startsWith("/auth");
   const isProtectedRoute = PROTECTED_ROUTES.some((route) =>
     pathname.startsWith(route)
@@ -20,16 +19,16 @@ export const AuthChecker = ({ children }: { children: React.ReactNode }) => {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: dependencies are fine
   useEffect(() => {
-    if (!(isLoading || redirected)) {
+    if (!isLoading) {
       if (!isLoggedIn && isProtectedRoute) {
-        setRedirected(true);
         router.replace("/auth/login");
+        router.refresh();
       } else if (isLoggedIn && isAuthRoute) {
-        setRedirected(true);
         router.replace("/experiment");
+        router.refresh();
       }
     }
-  }, [isLoading, isLoggedIn, isAuthRoute, isProtectedRoute, redirected]);
+  }, [isLoading, isLoggedIn, isAuthRoute, isProtectedRoute]);
 
   if (isLoading) {
     return <Loading />;
