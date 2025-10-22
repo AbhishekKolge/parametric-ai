@@ -44,6 +44,7 @@ export const SignUpForm = () => {
   const form = useForm<SignUpFormDto>({
     resolver: zodResolver(signUpFormSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
       confirmPassword: "",

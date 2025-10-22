@@ -281,7 +281,7 @@ export const CreateExperimentForm = ({ toggle }: CreateExperimentFormProps) => {
                       >
                         {tagFields.map((tag, index) => (
                           <InputGroupText
-                            className="min-w-auto rounded-full bg-white ps-4 text-secondary"
+                            className="min-w-auto rounded-full bg-white ps-4 text-secondary text-sm"
                             key={tag.id}
                           >
                             <span className="max-w-[150px] truncate">

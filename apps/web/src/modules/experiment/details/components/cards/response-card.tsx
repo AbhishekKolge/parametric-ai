@@ -87,18 +87,27 @@ export const ResponseCard = ({
         </pre>
       </CardContent>
       <CardFooter className="flex-col items-start gap-4">
-        <div className="flex flex-wrap items-center gap-2">
-          {Object.entries(retypedMetrics).map(([key, value]) => {
-            if (!BADGE_METRICS_KEYS.includes(key as keyof ResponseMetrics)) {
-              return null;
-            }
-            return (
-              <Badge key={key}>
-                {METRICS_LABEL_MAP[key as keyof ResponseMetrics]}:{" "}
-                {formatNumber(value)}%
-              </Badge>
-            );
-          })}
+        <div className="flex w-full items-center justify-between gap-4">
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge variant="secondary">Temperature: {temperature}</Badge>
+            <Badge variant="secondary">Top P: {topP}</Badge>
+            <Badge variant="secondary">
+              Max Completion Tokens: {maxCompletionTokens}
+            </Badge>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            {Object.entries(retypedMetrics).map(([key, value]) => {
+              if (!BADGE_METRICS_KEYS.includes(key as keyof ResponseMetrics)) {
+                return null;
+              }
+              return (
+                <Badge key={key}>
+                  {METRICS_LABEL_MAP[key as keyof ResponseMetrics]}:{" "}
+                  {formatNumber(value)}%
+                </Badge>
+              );
+            })}
+          </div>
         </div>
         <Accordion className="w-full" collapsible type="single">
           <AccordionItem value="quality-metrics">

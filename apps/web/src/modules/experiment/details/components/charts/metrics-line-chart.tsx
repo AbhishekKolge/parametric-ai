@@ -38,8 +38,8 @@ export const MetricsLineChart = ({ metrics }: MetricsLineChartProps) => {
   const isMobile = useIsMobile();
   const [startIndex, setStartIndex] = useState(0);
 
-  const chartData = metrics.map((r, idx) => ({
-    response: `R${idx + 1}`,
+  const chartData = metrics.map((r, index) => ({
+    response: `R${index + 1}`,
     coherence: formatNumber(r.coherence),
     relevance: formatNumber(r.relevance),
     creativity: formatNumber(r.creativity),
