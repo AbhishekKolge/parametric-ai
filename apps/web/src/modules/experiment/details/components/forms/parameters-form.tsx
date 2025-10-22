@@ -13,6 +13,7 @@ import {
 } from "@parametric-ai/ui/components/card";
 import {
   Field,
+  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
@@ -246,6 +247,11 @@ export const ParametersForm = () => {
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
                     )}
+                    <FieldDescription>
+                      We estimate the maximum completion tokens using Groq’s
+                      model metadata. Actual limits may vary if Groq’s data
+                      isn’t up to date, adjust this value manually if needed.
+                    </FieldDescription>
                   </Field>
                 )}
               />
