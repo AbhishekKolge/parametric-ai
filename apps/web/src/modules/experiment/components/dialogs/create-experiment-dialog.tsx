@@ -16,8 +16,8 @@ export const CreateExperimentDialog = ({
   close,
 }: CreateExperimentDialogProps) => (
   <Dialog onOpenChange={toggle} open={isOpen}>
-    <DialogContent className="max-h-5/6 grid-rows-[auto_1fr_auto] sm:max-w-3xl">
-      <DialogHeader>
+    <DialogContent className="max-h-5/6 grid-rows-[auto_1fr_auto] p-4 sm:max-w-3xl">
+      <DialogHeader className="p-2">
         <DialogTitle>Create New Experiment</DialogTitle>
         <DialogDescription>
           Set up a new experiment to test different LLM parameters

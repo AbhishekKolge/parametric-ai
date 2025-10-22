@@ -123,7 +123,7 @@ export const CreateExperimentForm = ({ close }: CreateExperimentFormProps) => {
   return (
     <>
       <form
-        className="overflow-y-scroll"
+        className="overflow-y-scroll p-2"
         id="create-experiment-form"
         onSubmit={form.handleSubmit(onSubmit)}
       >
@@ -328,7 +328,7 @@ export const CreateExperimentForm = ({ close }: CreateExperimentFormProps) => {
           />
         </FieldGroup>
       </form>
-      <div className="flex justify-end gap-2">
+      <div className="flex justify-end gap-2 p-2">
         <Button
           disabled={createExperimentMutation.isPending}
           onClick={close}
