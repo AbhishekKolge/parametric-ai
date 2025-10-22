@@ -14,11 +14,11 @@ export const ErrorBlock = ({
 }: ErrorBlockProps) => (
   <div
     className={cn(
-      "flex flex-col items-center justify-center gap-6 md:gap-8",
+      "flex flex-col items-center justify-center gap-4 md:gap-8",
       className
     )}
   >
-    <Ban className="text-destructive" size={60} />
+    <Ban className="h-12 w-12 text-destructive md:h-14 md:w-14" />
     <div className="flex flex-col items-center gap-4">
       <p className="text-base md:text-lg">{message}</p>
       <Button onClick={handleRetry}>

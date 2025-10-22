@@ -178,7 +178,11 @@ export const ResetPasswordForm = () => {
           </CardContent>
           <CardFooter>
             <Field>
-              <Button form="reset-password-form" type="submit">
+              <Button
+                disabled={form.formState.isSubmitting}
+                form="reset-password-form"
+                type="submit"
+              >
                 <LoadingSwap isLoading={form.formState.isSubmitting}>
                   Reset
                 </LoadingSwap>

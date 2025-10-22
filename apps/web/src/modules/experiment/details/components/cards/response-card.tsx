@@ -68,11 +68,16 @@ export const ResponseCard = ({
   return (
     <Card className="@container">
       <CardHeader>
-        <div className="flex items-center justify-between">
+        <div className="flex @md:flex-row flex-col-reverse @md:items-center justify-between gap-2">
           <CardTitle>
             Overall Quality Score: {formatNumber(retypedMetrics.overallScore)}%
           </CardTitle>
-          <Button onClick={copyHandler} size="icon" variant="ghost">
+          <Button
+            className="self-end"
+            onClick={copyHandler}
+            size="icon"
+            variant="ghost"
+          >
             <Copy />
           </Button>
         </div>
@@ -87,7 +92,7 @@ export const ResponseCard = ({
         </pre>
       </CardContent>
       <CardFooter className="flex-col items-start gap-4">
-        <div className="flex w-full items-center justify-between gap-4">
+        <div className="flex w-full @md:flex-row flex-col items-center justify-between gap-4">
           <div className="flex flex-wrap items-center gap-2">
             <Badge variant="secondary">Temperature: {temperature}</Badge>
             <Badge variant="secondary">Top P: {topP}</Badge>
@@ -188,13 +193,13 @@ export const ResponseCard = ({
 };
 
 export const ResponseCardLoading = () => (
-  <Card>
+  <Card className="@container">
     <CardHeader>
-      <div className="flex items-center justify-between">
+      <div className="flex @md:flex-row flex-col-reverse @md:items-center justify-between gap-2">
         <CardTitle>
-          <Skeleton className="h-4 w-2xs" />
+          <Skeleton className="h-4 @md:w-2xs w-28" />
         </CardTitle>
-        <Skeleton className="h-9 w-9" />
+        <Skeleton className="h-9 w-9 self-end" />
       </div>
       <CardDescription className="flex items-center gap-2">
         <Skeleton className="h-5 w-32" />
@@ -205,10 +210,17 @@ export const ResponseCardLoading = () => (
       <Skeleton className="h-24 w-full" />
     </CardContent>
     <CardFooter className="flex-col items-start gap-4">
-      <div className="flex items-center gap-2">
-        {Array.from({ length: 3 }).map(() => (
-          <Skeleton className="h-[22px] w-32" key={crypto.randomUUID()} />
-        ))}
+      <div className="flex w-full @md:flex-row flex-col items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center gap-2">
+          {Array.from({ length: 3 }).map(() => (
+            <Skeleton className="h-[22px] w-24" key={crypto.randomUUID()} />
+          ))}
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          {Array.from({ length: 3 }).map(() => (
+            <Skeleton className="h-[22px] w-24" key={crypto.randomUUID()} />
+          ))}
+        </div>
       </div>
       <Skeleton className="h-8 w-full" />
       <Skeleton className="h-8 w-full" />

@@ -39,7 +39,7 @@ export const MetricsBarChart = ({ metrics }: MetricsBarChartProps) => {
   const [startIndex, setStartIndex] = useState(0);
 
   const chartData = metrics.map((r, index) => ({
-    response: `R${index + 1} | Temp ${r.temperature} | TopP ${r.topP} | MaxTokens ${r.maxCompletionTokens}`,
+    response: `R${index + 1}${isMobile ? "" : ` | Temp. ${r.temperature} | TopP ${r.topP} | Max. Tokens ${r.maxCompletionTokens}`}`,
     coherence: formatNumber(r.coherence),
     relevance: formatNumber(r.relevance),
     creativity: formatNumber(r.creativity),
@@ -86,35 +86,36 @@ export const MetricsBarChart = ({ metrics }: MetricsBarChartProps) => {
 
   return (
     <Card>
-      <CardHeader>
-        <div className="flex items-center justify-end gap-4">
-          {chartData.length >
-            (isMobile
-              ? MOBILE_MAX_VISIBLE_METRIC_BARS
-              : MAX_VISIBLE_METRIC_BARS) && (
-            <>
-              <Button
-                disabled={!canNavigateLeft}
-                onClick={navigateLeftHandler}
-                size="icon"
-                variant="outline"
-              >
-                <ChevronLeft />
-              </Button>
-              <Button
-                disabled={!canNavigateRight}
-                onClick={navigateRightHandler}
-                size="icon"
-                variant="outline"
-              >
-                <ChevronRight />
-              </Button>
-            </>
-          )}
-        </div>
-      </CardHeader>
+      {chartData.length >
+        (isMobile
+          ? MOBILE_MAX_VISIBLE_METRIC_BARS
+          : MAX_VISIBLE_METRIC_BARS) && (
+        <CardHeader>
+          <div className="flex items-center justify-end gap-4">
+            <Button
+              disabled={!canNavigateLeft}
+              onClick={navigateLeftHandler}
+              size="icon"
+              variant="outline"
+            >
+              <ChevronLeft />
+            </Button>
+            <Button
+              disabled={!canNavigateRight}
+              onClick={navigateRightHandler}
+              size="icon"
+              variant="outline"
+            >
+              <ChevronRight />
+            </Button>
+          </div>
+        </CardHeader>
+      )}
       <CardContent>
-        <ChartContainer className="h-50 w-full md:h-80" config={chartConfig}>
+        <ChartContainer
+          className="h-30 w-full sm:h-40 md:h-80"
+          config={chartConfig}
+        >
           <BarChart accessibilityLayer data={visibleData}>
             <CartesianGrid />
             <XAxis

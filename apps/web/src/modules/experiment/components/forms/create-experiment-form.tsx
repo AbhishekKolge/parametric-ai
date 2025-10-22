@@ -122,7 +122,11 @@ export const CreateExperimentForm = ({ close }: CreateExperimentFormProps) => {
 
   return (
     <>
-      <form id="create-experiment-form" onSubmit={form.handleSubmit(onSubmit)}>
+      <form
+        className="overflow-y-scroll"
+        id="create-experiment-form"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
         <FieldGroup>
           <Controller
             control={form.control}
@@ -304,6 +308,7 @@ export const CreateExperimentForm = ({ close }: CreateExperimentFormProps) => {
 
                     <InputGroupInput
                       aria-invalid={fieldState.invalid}
+                      className="text-sm"
                       disabled={tagFields.length >= MAX_TAGS_LENGTH}
                       id="tags"
                       maxLength={MAX_EXPERIMENT_TAG_LENGTH}

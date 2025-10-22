@@ -85,35 +85,36 @@ export const MetricsLineChart = ({ metrics }: MetricsLineChartProps) => {
 
   return (
     <Card>
-      <CardHeader>
-        <div className="flex items-center justify-end gap-4">
-          {chartData.length >
-            (isMobile
-              ? MOBILE_MAX_VISIBLE_METRIC_BARS
-              : MAX_VISIBLE_METRIC_BARS) && (
-            <>
-              <Button
-                disabled={!canNavigateLeft}
-                onClick={navigateLeftHandler}
-                size="icon"
-                variant="outline"
-              >
-                <ChevronLeft />
-              </Button>
-              <Button
-                disabled={!canNavigateRight}
-                onClick={navigateRightHandler}
-                size="icon"
-                variant="outline"
-              >
-                <ChevronRight />
-              </Button>
-            </>
-          )}
-        </div>
-      </CardHeader>
+      {chartData.length >
+        (isMobile
+          ? MOBILE_MAX_VISIBLE_METRIC_BARS
+          : MAX_VISIBLE_METRIC_BARS) && (
+        <CardHeader>
+          <div className="flex items-center justify-end gap-4">
+            <Button
+              disabled={!canNavigateLeft}
+              onClick={navigateLeftHandler}
+              size="icon"
+              variant="outline"
+            >
+              <ChevronLeft />
+            </Button>
+            <Button
+              disabled={!canNavigateRight}
+              onClick={navigateRightHandler}
+              size="icon"
+              variant="outline"
+            >
+              <ChevronRight />
+            </Button>
+          </div>
+        </CardHeader>
+      )}
       <CardContent>
-        <ChartContainer className="h-50 w-full md:h-80" config={chartConfig}>
+        <ChartContainer
+          className="h-30 w-full sm:h-40 md:h-80"
+          config={chartConfig}
+        >
           <LineChart
             accessibilityLayer
             data={visibleData}

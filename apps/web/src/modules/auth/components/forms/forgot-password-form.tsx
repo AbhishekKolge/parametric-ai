@@ -94,7 +94,11 @@ export const ForgotPasswordForm = () => {
       </CardContent>
       <CardFooter>
         <Field>
-          <Button form="forgot-password-form" type="submit">
+          <Button
+            disabled={form.formState.isSubmitting}
+            form="forgot-password-form"
+            type="submit"
+          >
             <LoadingSwap isLoading={form.formState.isSubmitting}>
               Send Reset Email
             </LoadingSwap>

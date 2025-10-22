@@ -162,7 +162,11 @@ export const LoginForm = () => {
         </CardContent>
         <CardFooter>
           <Field>
-            <Button form="login-form" type="submit">
+            <Button
+              disabled={form.formState.isSubmitting}
+              form="login-form"
+              type="submit"
+            >
               <LoadingSwap isLoading={form.formState.isSubmitting}>
                 Login
               </LoadingSwap>

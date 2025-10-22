@@ -16,7 +16,7 @@ export const CreateExperimentDialog = ({
   close,
 }: CreateExperimentDialogProps) => (
   <Dialog onOpenChange={toggle} open={isOpen}>
-    <DialogContent className="sm:max-w-3xl">
+    <DialogContent className="max-h-5/6 grid-rows-[auto_1fr_auto] sm:max-w-3xl">
       <DialogHeader>
         <DialogTitle>Create New Experiment</DialogTitle>
         <DialogDescription>
