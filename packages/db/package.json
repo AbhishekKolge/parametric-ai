@@ -13,10 +13,12 @@
   },
   "scripts": {
     "build": "tsdown",
-    "db:push": "prisma db push",
-    "db:studio": "prisma studio",
+    "prebuild": "pnpm db:generate",
     "db:generate": "prisma generate",
-    "db:migrate": "prisma migrate dev"
+    "db:migrate": "prisma migrate deploy",
+    "db:migrate:dev": "prisma migrate dev",
+    "db:studio": "prisma studio",
+    "db:push": "prisma db push"
   },
   "devDependencies": {
     "prisma": "^6.15.0",
