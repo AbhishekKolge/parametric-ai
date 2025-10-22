@@ -10,7 +10,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@parametric-ai/ui/components/alert-dialog";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { useDisclosure } from "@/hooks/use-disclosure";
 import type { authClient } from "@/lib/auth-client";
 import {
@@ -59,6 +59,8 @@ export const ResendEmailVerificationAlert = ({
   ) => {
     e.preventDefault();
   };
+
+  useEffect(() => () => clearInterval(interval.current), []);
 
   return (
     <AlertDialog onOpenChange={toggle} open={isOpen}>

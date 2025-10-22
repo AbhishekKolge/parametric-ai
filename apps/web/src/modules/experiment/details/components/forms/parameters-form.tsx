@@ -148,7 +148,7 @@ export const ParametersForm = () => {
                     <div className="flex items-center gap-2">
                       <FieldLabel htmlFor="temperature">Temperature</FieldLabel>
                       <Tooltip>
-                        <TooltipTrigger>
+                        <TooltipTrigger type="button">
                           <Info size={16} />
                         </TooltipTrigger>
                         <TooltipContent className="max-w-2xs" side="right">
@@ -183,7 +183,7 @@ export const ParametersForm = () => {
                     <div className="flex items-center gap-2">
                       <FieldLabel htmlFor="topP">Top P</FieldLabel>
                       <Tooltip>
-                        <TooltipTrigger>
+                        <TooltipTrigger type="button">
                           <Info size={16} />
                         </TooltipTrigger>
                         <TooltipContent className="max-w-2xs" side="right">
@@ -217,7 +217,7 @@ export const ParametersForm = () => {
                         Max Completion Tokens
                       </FieldLabel>
                       <Tooltip>
-                        <TooltipTrigger>
+                        <TooltipTrigger type="button">
                           <Info size={16} />
                         </TooltipTrigger>
                         <TooltipContent className="max-w-2xs" side="right">
