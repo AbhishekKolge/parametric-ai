@@ -39,7 +39,7 @@ export const MetricsBarChart = ({ metrics }: MetricsBarChartProps) => {
   const [startIndex, setStartIndex] = useState(0);
 
   const chartData = metrics.map((r, index) => ({
-    response: `R${index + 1}${isMobile ? "" : ` | Temp. ${r.temperature} | TopP ${r.topP} | Max. Tokens ${r.maxCompletionTokens}`}`,
+    response: `R${index + 1}`,
     coherence: formatNumber(r.coherence),
     relevance: formatNumber(r.relevance),
     creativity: formatNumber(r.creativity),
