@@ -1,12 +1,14 @@
 import { useMutation } from "@tanstack/react-query";
 
 import { toast } from "sonner";
+import { authClient } from "@/lib/auth-client";
 import { queryClient, trpc } from "@/services/trpc";
 
 export const useGenerateResponse = (
   opts?: Parameters<typeof trpc.experiment.generateResponse.mutationOptions>[0]
-) =>
-  useMutation(
+) => {
+  const { refetch } = authClient.useSession();
+  return useMutation(
     trpc.experiment.generateResponse.mutationOptions({
       ...opts,
       onSuccess: (...args) => {
@@ -29,6 +31,7 @@ export const useGenerateResponse = (
             id: args[0].data.experimentId,
           }),
         });
+        refetch();
         opts?.onSuccess?.(...args);
       },
       onError: (...args) => {
@@ -37,3 +40,4 @@ export const useGenerateResponse = (
       },
     })
   );
+};

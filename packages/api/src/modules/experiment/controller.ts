@@ -1,4 +1,9 @@
 import prisma, { type Prisma } from "@parametric-ai/db";
+import {
+  CREDIT_RESET_HOUR,
+  DEFAULT_CREDITS,
+} from "@parametric-ai/utils/auth/const";
+import { getTimeInterval } from "@parametric-ai/utils/common/helper";
 import { computeQualityMetrics } from "@parametric-ai/utils/experiment/helpers";
 import type {
   CreateExperimentDto,
@@ -13,6 +18,7 @@ import type {
 import type { ResponseMetrics } from "@parametric-ai/utils/experiment/types";
 import { EXPECTED_OUTPUT_TOKENS_DEFAULT } from "@parametric-ai/utils/prompt/const";
 import { type inferProcedureOutput, TRPCError } from "@trpc/server";
+import { addHours, isPast } from "date-fns";
 import Groq from "groq-sdk";
 import { utils, write } from "xlsx";
 import type { Context } from "../../context";
@@ -134,6 +140,7 @@ export const deleteOne = async ({
     throw new TRPCError({
       code: "NOT_FOUND",
       message: "Experiment not found",
+      cause: "Experiment not found",
     });
   }
 
@@ -150,11 +157,25 @@ export const generateResponse = async ({
   input: GenerateResponseDto;
 }) => {
   const { maxCompletionTokens, topP, temperature, experimentId } = input;
-  const userId = (ctx.session as NonNullable<Context["session"]>).user.id;
+  const {
+    id: userId,
+    creditResetTime,
+    credits,
+  } = (ctx.session as NonNullable<Context["session"]>).user;
 
   const experiment = await prisma.experiment.findFirstOrThrow({
     where: { id: experimentId, userId },
   });
+
+  if (creditResetTime && !isPast(creditResetTime)) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: `Credits exhausted. Please wait until ${getTimeInterval(
+        creditResetTime
+      )} to get more credits.`,
+      cause: "No credits",
+    });
+  }
 
   const { usage, choices } = await groq.chat.completions.create({
     messages: [
@@ -185,15 +206,41 @@ export const generateResponse = async ({
     ),
   };
 
-  await prisma.response.create({
-    data: {
-      experimentId,
-      temperature,
-      topP,
-      maxCompletionTokens,
-      content: choices[0]?.message.content || "",
-      metrics,
-    },
+  await prisma.$transaction(async (tx) => {
+    if (credits <= 1) {
+      await tx.user.update({
+        where: { id: userId },
+        data: {
+          credits: DEFAULT_CREDITS,
+          creditResetTime: addHours(new Date(), CREDIT_RESET_HOUR),
+        },
+      });
+    } else {
+      await tx.user.update({
+        where: { id: userId },
+        data: {
+          credits: {
+            decrement: 1,
+          },
+          ...(creditResetTime
+            ? {
+                creditResetTime: null,
+              }
+            : {}),
+        },
+      });
+    }
+
+    await tx.response.create({
+      data: {
+        experimentId,
+        temperature,
+        topP,
+        maxCompletionTokens,
+        content: choices[0]?.message.content || "",
+        metrics,
+      },
+    });
   });
 
   return {

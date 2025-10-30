@@ -1,6 +1,6 @@
 import prisma from "@parametric-ai/db";
 import {
-  SESSION_COOKIE_MAX_AGE,
+  DEFAULT_CREDITS,
   SESSION_EXPIRES_IN,
   SESSION_UPDATE_AGE,
 } from "@parametric-ai/utils/auth/const";
@@ -20,8 +20,7 @@ export const auth = betterAuth({
     expiresIn: SESSION_EXPIRES_IN,
     updateAge: SESSION_UPDATE_AGE,
     cookieCache: {
-      enabled: true,
-      maxAge: SESSION_COOKIE_MAX_AGE,
+      enabled: false,
     },
   },
   rateLimit: {
@@ -64,6 +63,19 @@ export const auth = betterAuth({
       sameSite: "none",
       secure: true,
       httpOnly: true,
+    },
+  },
+  user: {
+    additionalFields: {
+      credits: {
+        type: "number",
+        input: false,
+        defaultValue: DEFAULT_CREDITS,
+      },
+      creditResetTime: {
+        type: "date",
+        input: false,
+      },
     },
   },
 });

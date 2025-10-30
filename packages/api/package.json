@@ -31,6 +31,7 @@
     "@parametric-ai/db": "workspace:*",
     "@parametric-ai/utils": "workspace:*",
     "superjson": "catalog:",
-    "xlsx": "catalog:"
+    "xlsx": "catalog:",
+    "date-fns": "catalog:"
   }
 }

@@ -10,6 +10,7 @@
   "dependencies": {
     "@hookform/resolvers": "catalog:",
     "@parametric-ai/api": "workspace:*",
+    "@parametric-ai/auth": "workspace:*",
     "@parametric-ai/ui": "workspace:*",
     "@parametric-ai/utils": "workspace:*",
     "@tanstack/react-query": "catalog:",

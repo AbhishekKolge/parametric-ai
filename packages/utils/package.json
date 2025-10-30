@@ -62,6 +62,7 @@
     "nodemailer": "^7.0.9",
     "zod": "catalog:",
     "natural": "catalog:",
-    "sentiment": "catalog:"
+    "sentiment": "catalog:",
+    "date-fns": "catalog:"
   }
 }
