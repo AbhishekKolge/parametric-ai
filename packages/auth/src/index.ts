@@ -15,6 +15,7 @@ export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
+
   trustedOrigins: [process.env.CORS_ORIGIN || ""],
   session: {
     expiresIn: SESSION_EXPIRES_IN,
@@ -60,13 +61,9 @@ export const auth = betterAuth({
   },
   advanced: {
     defaultCookieAttributes: {
-      secure: true,
-      signed: true,
       sameSite: "none",
-    },
-    crossSubDomainCookies: {
-      enabled: true,
-      domain: process.env.COOKIE_DOMAIN,
+      secure: true,
+      httpOnly: true,
     },
   },
   user: {
