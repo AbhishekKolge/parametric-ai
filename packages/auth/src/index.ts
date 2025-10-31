@@ -60,9 +60,9 @@ export const auth = betterAuth({
   },
   advanced: {
     defaultCookieAttributes: {
-      sameSite: "none",
       secure: true,
-      httpOnly: true,
+      signed: true,
+      sameSite: "none",
     },
     crossSubDomainCookies: {
       enabled: true,
